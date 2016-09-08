@@ -106,10 +106,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\app.js" />
-    <Content Include="app\components\testcomponent.js" />
     <Content Include="Global.asax" />
-    <Content Include="Index.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
