@@ -1,0 +1,46 @@
+﻿html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+}
+
+.splash {
+    font-size: 2em;
+    flex-direction: column;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .splash > * {
+        margin: 0.5em;
+    }
+
+.hidden {
+    display: none;
+}
+
+.all-views {
+    display: flex;
+    align-items: stretch;
+    justify-content:space-between;
+    flex: 1 1 auto;
+}
+
+    .all-views > * {
+        flex: 1 1 auto;
+        border: 1px inset #808080;
+        margin:0.2em;
+    }
+
+information-system {
+}
+
+preservation-system {
+}
+
+.capm-system {
+}

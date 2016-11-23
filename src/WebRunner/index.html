@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CaPM</title>
+
+    <link rel="stylesheet" href="Dependencies/FontAwesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/site.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+<body ng-app="CaPM">
+    <div class="splash" ng-if="false">
+        <div class="message">Please wait while the CaPM is loading</div>
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+    <div class="hidden all-views" ng-class="{hidden: false}">
+        <information-system submission-agreement-id="'SubmissionAgreement1'"></information-system>
+        <div ng-view class="capm-system"></div>
+        <preservation-system></preservation-system>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-route.min.js"></script>
+    <script src="Scripts/app.js"></script>
+    <script src="Scripts/routes.js"></script>
+    <script src="Scripts/Components/information-system/information-system.js"></script>
+    <script src="Scripts/Components/preservation-system/preservation-system.js"></script>
+    <script src="Scripts/Components/capm-ingest-list/capm-ingest-list.js"></script>
+    <script src="Scripts/Components/capm-ingest-details/capm-ingest-details.js"></script>
+</body>
+</html>
