@@ -1,1 +1,13 @@
-﻿<h1>capm-ingest-details</h1>
+﻿<h1>Details for {{$ctrl.id}}</h1>
+<p ng-if="$ctrl.couldNotGetDetails">
+    Could not retrieve details for ingest with ID {{$ctrl.id}}. Perhaps the URL is incorrect?
+</p>
+<div ng-if="!$ctrl.couldNotGetDetails">
+    <ul>
+        <li ng-repeat="event in $ctrl.events">
+            <pre>{{$ctrl.stringify(event)}}</pre>
+        </li>
+    </ul>
+</div>
+
+<a href="#/">Navigate to list</a>

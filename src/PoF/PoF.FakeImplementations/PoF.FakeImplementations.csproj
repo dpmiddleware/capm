@@ -53,6 +53,10 @@
       <Project>{ED3154E7-508C-4015-8E4E-155D167678B3}</Project>
       <Name>PoF.Components.Collector</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj">
+      <Project>{433ea217-173e-4ed1-a8ae-e2d9ebf12602}</Project>
+      <Name>PoF.Components.RandomError</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PoF.CaPM\PoF.CaPM.csproj">
       <Project>{1FBDBB42-C22C-4182-AD7B-173B89BB2ACA}</Project>
       <Name>PoF.CaPM</Name>

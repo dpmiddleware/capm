@@ -34,7 +34,8 @@ namespace PoF.Components.Collector
             {
                 var client = new HttpClient();
                 var store = await GetStore(command.IngestId);
-                var fileStream = await client.GetStreamAsync(command.IngestParameters);
+                var response = await client.GetAsync(command.IngestParameters).ConfigureAwait(false);
+                var fileStream = await response.Content.ReadAsStreamAsync();
                 await store.SetItemAsync("downloadedfile", fileStream);
                 await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
                 {

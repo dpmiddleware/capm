@@ -5,6 +5,7 @@ using PoF.CaPM.SubmissionAgreements;
 using PoF.Common;
 using PoF.Components.Archiver;
 using PoF.Components.Collector;
+using PoF.Components.RandomError;
 using PoF.FakeImplementations;
 using PoF.Messaging;
 using PoF.Messaging.InMemory;
@@ -20,6 +21,7 @@ namespace WebRunner
         {
             IContainer container = BootstrapIoCContainer();
             StartComponent<CollectorComponent>(container);
+            StartComponent<RandomErrorComponent>(container);
             StartComponent<ArchiverComponent>(container);
             StartComponent<CaPMSystem>(container);
 
@@ -43,12 +45,15 @@ namespace WebRunner
             builder.RegisterModule<CaPMAutofacModule>();
             builder.RegisterModule<CollectorAutofacModule>();
             builder.RegisterModule<ArchiverAutofacModule>();
+            builder.RegisterModule<RandomErrorAutofacModule>();
 
             builder.RegisterType<FakeComponentChannelIdentifierRepository>().As<IComponentChannelIdentifierRepository>().SingleInstance();
             builder.RegisterType<FakeSubmissionAgreementStore>().As<ISubmissionAgreementStore>().SingleInstance();
             builder.RegisterType<CaPMSystem>().SingleInstance();
+            builder.RegisterType<CaPMEventStore>().As<ICaPMEventStore>().SingleInstance();
             builder.RegisterType<CollectorComponent>().SingleInstance();
             builder.RegisterType<ArchiverComponent>().SingleInstance();
+            builder.RegisterType<RandomErrorComponent>().SingleInstance();
             builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
             builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
             builder.RegisterType<InMemoryMessageSource>().As<IMessageSource>().SingleInstance();

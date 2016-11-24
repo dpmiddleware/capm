@@ -23,7 +23,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
 
         public async Task Handle(CompleteComponentWorkCommand command)
         {
-            var eventStore = await CaPMEventStore.GetCaPMEventStore(_stagingStoreContainer, command.IngestId);
+            var eventStore = await CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, command.IngestId);
             await eventStore.StoreEvent(new IngestComponentWorkCompleted()
             {
                 ComponentExecutionId = command.ComponentExecutionId

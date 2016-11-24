@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IS", "IS", "{7B60CA26-80E1-4372-BF77-4036163BB2B4}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoF.FakeImplementations", "PoF\PoF.FakeImplementations\PoF.FakeImplementations.csproj", "{6EFEB351-7A71-43BA-A329-752E16B06634}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRunner", "WebRunner\WebRunner.csproj", "{1583185B-9165-4620-A1B5-AA9B00AC7CD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoF.Components.RandomError", "PoF\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj", "{433EA217-173E-4ED1-A8AE-E2D9EBF12602}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,10 @@ Global
 		{1583185B-9165-4620-A1B5-AA9B00AC7CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1583185B-9165-4620-A1B5-AA9B00AC7CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1583185B-9165-4620-A1B5-AA9B00AC7CD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,5 +90,6 @@ Global
 		{8F733DFA-C3FA-46E6-BFF1-B80152A97F42} = {5EE99293-336B-4E65-B154-3638F79A4502}
 		{ECE62D1E-9045-4FC0-93DE-3E3375053205} = {5EE99293-336B-4E65-B154-3638F79A4502}
 		{6EFEB351-7A71-43BA-A329-752E16B06634} = {5EE99293-336B-4E65-B154-3638F79A4502}
+		{433EA217-173E-4ED1-A8AE-E2D9EBF12602} = {CF8F0889-EE99-49F1-ACB5-A77475A364AD}
 	EndGlobalSection
 EndGlobal

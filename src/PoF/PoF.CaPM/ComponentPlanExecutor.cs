@@ -63,11 +63,11 @@ namespace PoF.CaPM
                 IngestParameters = ingestStartedEvent.IngestParameters
             };
             //We would need to do the following two as part of a transaction, if we want to make any guarantees
-            await messageChannel.Send(command);
             await eventStore.StoreEvent(new IngestComponentWorkStartRequested()
             {
                 CommandSent = command
             });
+            await messageChannel.Send(command);
         }
 
         private async Task ExecuteComponentCompensation(Guid ingestId, IngestPlanSet.IngestPlanEntry planEntry)
@@ -78,6 +78,7 @@ namespace PoF.CaPM
             var messageChannel = _messageSenderFactory.GetChannel<StartComponentCompensationCommand>(plannedComponentChannelIdentifier);
             var command = new StartComponentCompensationCommand()
             {
+                IngestId = ingestId,
                 ComponentCode = planEntry.ComponentCode,
                 ComponentExecutionId = planEntry.ComponentExecutionId,
                 ComponentSettings = planEntry.ComponentSettings,
@@ -85,11 +86,11 @@ namespace PoF.CaPM
                 IngestParameters = ingestStartedEvent.IngestParameters
             };
             //We would need to do the following two as part of a transaction, if we want to make any guarantees
-            await messageChannel.Send(command);
             await eventStore.StoreEvent(new IngestComponentCompensationStartRequested()
             {
                 CommandSent = command
             });
+            await messageChannel.Send(command);
         }
 
         private IngestPlanSet.IngestPlanEntry? GetFirstNonCompletedComponentInPlan(IngestPlanSet lastExecutionPlan, IIngestEvent[] storedEvents)
@@ -110,9 +111,9 @@ namespace PoF.CaPM
             return null;
         }
 
-        private Task<CaPMEventStore> GetCaPMEventStore(Guid ingestId)
+        private Task<CaPMIngestEventStore> GetCaPMEventStore(Guid ingestId)
         {
-            return CaPMEventStore.GetCaPMEventStore(_stagingStoreContainer, ingestId);
+            return CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, ingestId);
         }
 
         private ChannelIdentifier GetCaPMMessageChannelIdentifier()

@@ -129,13 +129,14 @@
   <ItemGroup>
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Models\IngestionModel.cs" />
+    <Compile Include="Models\StartIngestionModel.cs" />
     <Compile Include="Controllers\IngestionsController.cs" />
     <Compile Include="Controllers\SubmissionAgreementsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\Services\IngestEventService.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -164,6 +165,10 @@
     <ProjectReference Include="..\PoF\Components\PoF.Components.Collector\PoF.Components.Collector.csproj">
       <Project>{ed3154e7-508c-4015-8e4e-155d167678b3}</Project>
       <Name>PoF.Components.Collector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PoF\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj">
+      <Project>{433ea217-173e-4ed1-a8ae-e2d9ebf12602}</Project>
+      <Name>PoF.Components.RandomError</Name>
     </ProjectReference>
     <ProjectReference Include="..\PoF\PoF.CaPM\PoF.CaPM.csproj">
       <Project>{1fbdbb42-c22c-4182-ad7b-173b89bb2aca}</Project>

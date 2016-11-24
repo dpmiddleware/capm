@@ -5,6 +5,7 @@ using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
 using PoF.Components.Archiver;
 using PoF.Components.Collector;
+using PoF.Components.RandomError;
 using PoF.FakeImplementations;
 using PoF.Messaging;
 using PoF.Messaging.InMemory;
@@ -22,6 +23,7 @@ namespace ConsoleRunner
         {
             IContainer container = BootstrapIoCContainer();
             StartComponent<CollectorComponent>(container);
+            StartComponent<RandomErrorComponent>(container);
             StartComponent<ArchiverComponent>(container);
             StartComponent<CaPMSystem>(container);
             Task.Factory.StartNew(() =>
@@ -58,6 +60,7 @@ namespace ConsoleRunner
             builder.RegisterModule<CaPMAutofacModule>();
             builder.RegisterModule<CollectorAutofacModule>();
             builder.RegisterModule<ArchiverAutofacModule>();
+            builder.RegisterModule<RandomErrorAutofacModule>();
 
             builder.RegisterType<FakeComponentChannelIdentifierRepository>().As<IComponentChannelIdentifierRepository>().SingleInstance();
             builder.RegisterType<FakeSubmissionAgreementStore>().As<ISubmissionAgreementStore>().SingleInstance();

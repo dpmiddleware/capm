@@ -1,4 +1,6 @@
 ﻿html, body {
+    margin: 0;
+    padding: 0;
     height: 100%;
 }
 
@@ -31,16 +33,19 @@ body {
 }
 
     .all-views > * {
-        flex: 1 1 auto;
         border: 1px inset #808080;
-        margin:0.2em;
+        margin:0.4em;
+        overflow: auto; 
     }
 
 information-system {
+    flex: 0 1 auto;
 }
 
 preservation-system {
+    flex: 0 1 auto;
 }
 
 .capm-system {
+    flex: 1 1 auto;
 }

@@ -1,4 +1,5 @@
-﻿using PoF.Common;
+﻿using PoF.CaPM.IngestSaga.Events;
+using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
 using PoF.StagingStore;
 using System;
@@ -20,9 +21,33 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
             this._componentPlanExecutor = componentPlanExecutor;
         }
 
-        public Task Handle(FailComponentWorkCommand command)
+        public async Task Handle(FailComponentWorkCommand command)
         {
-            throw new NotImplementedException();
+            var eventStore = await CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, command.IngestId);
+            var allPreviousEvents = await eventStore.GetStoredEvents();
+            var previousPlan = allPreviousEvents.OfType<IngestPlanSet>().Last();
+            await eventStore.StoreEvent(new IngestComponentWorkFailed()
+            {
+                ComponentExecutionId = command.ComponentExecutionId,
+                Reason = command.Reason
+            });
+            var ingestPlan = new IngestPlanSet()
+            {
+                IngestPlan = previousPlan.IngestPlan
+                    .Reverse()
+                    //Only compensate actions which have finished successfully
+                    .Where(p => allPreviousEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Contains(p.ComponentExecutionId))
+                    .Select((eventToCompensate, index) => new IngestPlanSet.IngestPlanEntry()
+                {
+                    ComponentCode = eventToCompensate.ComponentCode,
+                    ComponentSettings = eventToCompensate.ComponentSettings,
+                    ComponentExecutionId = Guid.NewGuid(),
+                    IsCompensatingComponent = true,
+                    Order = (uint)index
+                }).ToArray()
+            };
+            await eventStore.StoreEvent(ingestPlan);
+            await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
         }
     }
 }

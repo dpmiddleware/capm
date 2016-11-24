@@ -4,18 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{901101C7-CBB4-4715-84F0-3F3278994505}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{433EA217-173E-4ED1-A8AE-E2D9EBF12602}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleRunner</RootNamespace>
-    <AssemblyName>ConsoleRunner</AssemblyName>
+    <RootNamespace>PoF.Components.RandomError</RootNamespace>
+    <AssemblyName>PoF.Components.RandomError</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -48,45 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomErrorAutofacModule.cs" />
+    <Compile Include="RandomErrorComponent.cs" />
+    <Compile Include="StartRandomErrorComponentWorkCommandHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PoF\Components\PoF.Components.Archiver\PoF.Components.Archiver.csproj">
-      <Project>{998c09e3-057a-4fd3-97bf-8417bfc90f9f}</Project>
-      <Name>PoF.Components.Archiver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF\Components\PoF.Components.Collector\PoF.Components.Collector.csproj">
-      <Project>{ed3154e7-508c-4015-8e4e-155d167678b3}</Project>
-      <Name>PoF.Components.Collector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj">
-      <Project>{433EA217-173E-4ED1-A8AE-E2D9EBF12602}</Project>
-      <Name>PoF.Components.RandomError</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF\PoF.CaPM\PoF.CaPM.csproj">
-      <Project>{1fbdbb42-c22c-4182-ad7b-173b89bb2aca}</Project>
-      <Name>PoF.CaPM</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF\PoF.Common\PoF.Common.csproj">
-      <Project>{46804729-e238-4c18-8417-dd93306a8ec8}</Project>
+    <ProjectReference Include="..\..\PoF.Common\PoF.Common.csproj">
+      <Project>{46804729-E238-4C18-8417-DD93306A8EC8}</Project>
       <Name>PoF.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PoF\PoF.FakeImplementations\PoF.FakeImplementations.csproj">
-      <Project>{6efeb351-7a71-43ba-a329-752e16b06634}</Project>
-      <Name>PoF.FakeImplementations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF\PoF.Messaging\PoF.Messaging.csproj">
-      <Project>{ece62d1e-9045-4fc0-93de-3e3375053205}</Project>
+    <ProjectReference Include="..\..\PoF.Messaging\PoF.Messaging.csproj">
+      <Project>{ECE62D1E-9045-4FC0-93DE-3E3375053205}</Project>
       <Name>PoF.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF\PoF.StagingStore\PoF.StagingStore.csproj">
-      <Project>{8f733dfa-c3fa-46e6-bff1-b80152a97f42}</Project>
-      <Name>PoF.StagingStore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

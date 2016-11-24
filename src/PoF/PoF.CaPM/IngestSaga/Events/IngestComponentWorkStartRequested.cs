@@ -13,6 +13,6 @@ namespace PoF.CaPM.IngestSaga.Events
         public DateTimeOffset Timestamp { get; set; }
         public Guid IngestId { get; set; }
         public uint Order { get; set; }
-        public StartComponentWorkCommand CommandSent { get; internal set; }
+        public StartComponentWorkCommand CommandSent { get; set; }
     }
 }

@@ -74,13 +74,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaPMAutofacModule.cs" />
+    <Compile Include="CaPMEventStore.cs" />
     <Compile Include="ComponentPlanExecutor.cs" />
+    <Compile Include="ICaPMEventStore.cs" />
     <Compile Include="IComponentPlanExecutor.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\CommandHandlerAutofacModule.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\CompleteComponentWorkCommand.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\FailComponentWorkCommandHandler.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\StartIngestCommandHandler.cs" />
-    <Compile Include="IngestSaga\CaPMEventStore.cs" />
+    <Compile Include="IngestSaga\CaPMIngestEventStore.cs" />
     <Compile Include="IngestSaga\Events\IngestCompleted.cs" />
     <Compile Include="IngestSaga\Events\IngestComponentWorkFailed.cs" />
     <Compile Include="IngestSaga\Events\IngestComponentCompensationCompleted.cs" />

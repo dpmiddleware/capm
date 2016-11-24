@@ -9,6 +9,7 @@ namespace PoF.Common.Commands.IngestCommands
 {
     public struct StartComponentCompensationCommand
     {
+        public Guid IngestId { get; set; }
         public string ComponentCode { get; set; }
         public Guid ComponentExecutionId { get; set; }
         public ChannelIdentifier ComponentResultCallbackChannel { get; set; }

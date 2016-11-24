@@ -16,6 +16,11 @@ namespace PoF.StagingStore.InMemory
             return Task.FromResult(true);
         }
 
+        public Task<Guid[]> GetStoredContextIds()
+        {
+            return Task.FromResult(_stagingStoreDictionary.Keys.ToArray());
+        }
+
         public Task<IStagingStore> GetStoreForContextIdAsync(Guid contextId)
         {
             return Task.FromResult(_stagingStoreDictionary[contextId]);

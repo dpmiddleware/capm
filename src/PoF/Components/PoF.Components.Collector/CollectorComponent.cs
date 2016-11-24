@@ -24,6 +24,7 @@ namespace PoF.Components.Collector
         public void Start()
         {
             _commandHandlerListener.RegisterCommandHandler<StartComponentWorkCommand, StartCollectorComponentWorkCommandHandler>(CollectorComponentIdentifier);
+            _commandHandlerListener.RegisterCommandHandler<StartComponentCompensationCommand, StartCollectorComponentCompensationCommandHandler>(CollectorComponentIdentifier);
         }
     }
 }

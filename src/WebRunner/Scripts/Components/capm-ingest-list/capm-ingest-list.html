@@ -1,1 +1,15 @@
 ﻿<h1>capm-ingest-list</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Started At</th>
+            <th>Ingest ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="ingest in $ctrl.ingests">
+            <td>{{ingest.value[0].timestamp}}</td>
+            <td><a href="#/{{ingest.key}}">{{ingest.key}}</a></td>
+        </tr>
+    </tbody>
+</table>

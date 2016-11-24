@@ -30,6 +30,23 @@ namespace PoF.FakeImplementations
                         Order = 2
                     }
                 }
+            },
+            ["RandomErrorSubmissionAgreement"] = new SubmissionAgreement()
+            {
+                SubmissionAgreementId = "RandomErrorSubmissionAgreement",
+                ProcessComponents = new SubmissionAgreement.ComponentExecutionPlan[]
+                {
+                    new SubmissionAgreement.ComponentExecutionPlan()
+                    {
+                        ComponentCode = PoF.Components.Collector.CollectorComponent.CollectorComponentIdentifier,
+                        Order = 1
+                    },
+                    new SubmissionAgreement.ComponentExecutionPlan()
+                    {
+                        ComponentCode = PoF.Components.RandomError.RandomErrorComponent.RandomErrorComponentIdentifier,
+                        Order = 2
+                    }
+                }
             }
         };
 

@@ -2,7 +2,7 @@
 
 namespace WebRunner.Models
 {
-    public class IngestionModel
+    public class StartIngestionModel
     {
         [Required]
         public string SubmissionAgreementId { get; set; }

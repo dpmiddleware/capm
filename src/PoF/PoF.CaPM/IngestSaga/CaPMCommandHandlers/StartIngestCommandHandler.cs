@@ -46,14 +46,14 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
                 IngestParameters = command.IngestParameters,
                 ExternalContextId = command.ExternalContextId
             };
-            var eventStore = await CaPMEventStore.CreateCaPMEventStore(_stagingStoreContainer, newIngestId);
+            var eventStore = await CaPMIngestEventStore.CreateCaPMEventStore(_stagingStoreContainer, newIngestId);
 
             await eventStore.StoreEvent(ingestStartedEvent);
             await CreateIngestPlanBasedOnSubmissionAgreement(eventStore, submissionAgreement);
             await _componentPlanExecutor.ExecuteNextComponentInPlan(newIngestId);
         }
 
-        private async Task CreateIngestPlanBasedOnSubmissionAgreement(CaPMEventStore eventStore, SubmissionAgreement submissionAgreement)
+        private async Task CreateIngestPlanBasedOnSubmissionAgreement(CaPMIngestEventStore eventStore, SubmissionAgreement submissionAgreement)
         {
             var ingestPlan = new IngestPlanSet()
             {

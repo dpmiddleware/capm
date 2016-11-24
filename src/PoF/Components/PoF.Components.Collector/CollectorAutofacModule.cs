@@ -12,6 +12,7 @@ namespace PoF.Components.Collector
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<StartCollectorComponentWorkCommandHandler>().InstancePerDependency();
+            builder.RegisterType<StartCollectorComponentCompensationCommandHandler>().InstancePerDependency();
         }
     }
 }
