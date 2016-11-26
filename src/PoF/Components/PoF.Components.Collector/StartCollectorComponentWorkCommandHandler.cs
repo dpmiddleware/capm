@@ -22,21 +22,16 @@ namespace PoF.Components.Collector
             this._messageSenderFactory = messageSenderFactory;
         }
 
-        private async Task<IComponentStagingStore> GetStore(Guid ingestId)
-        {
-            var ingestStore = await _stagingStoreContainer.GetStoreForContextIdAsync(ingestId);
-            return await ingestStore.GetComponentStagingStoreAsync(CollectorComponent.CollectorComponentIdentifier);
-        }
-
         public async Task Handle(StartComponentWorkCommand command)
         {
             try
             {
                 var client = new HttpClient();
-                var store = await GetStore(command.IngestId);
+                var store = await _stagingStoreContainer.GetSharedStore(command.IngestId);
                 var response = await client.GetAsync(command.IngestParameters).ConfigureAwait(false);
                 var fileStream = await response.Content.ReadAsStreamAsync();
-                await store.SetItemAsync("downloadedfile", fileStream);
+                await store.SetItemAsync("downloadedfile-bytes", fileStream);
+                await store.SetItemAsync("downloadedfile-contenttype", response.Content.Headers.ContentType.ToString());
                 await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
                 {
                     ComponentExecutionId = command.ComponentExecutionId,

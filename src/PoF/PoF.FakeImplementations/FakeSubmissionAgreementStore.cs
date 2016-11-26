@@ -45,6 +45,12 @@ namespace PoF.FakeImplementations
                     {
                         ComponentCode = PoF.Components.RandomError.RandomErrorComponent.RandomErrorComponentIdentifier,
                         Order = 2
+                    },
+                    new SubmissionAgreement.ComponentExecutionPlan()
+                    {
+                        ComponentCode = PoF.Components.Archiver.ArchiverComponent.ArchiverComponentIdentifier,
+                        Order = 3,
+                        ComponentSettings = "http://localhost:59669/api/aips"
                     }
                 }
             }

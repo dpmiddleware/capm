@@ -14,17 +14,17 @@ namespace PoF.Components.Collector
     public class CollectorComponent : IComponent
     {
         public const string CollectorComponentIdentifier = "Component.Collector";
-        private ICommandMessageListener _commandHandlerListener;
+        private ICommandMessageListener _commandMessageListener;
 
         public CollectorComponent(ICommandMessageListener commandHandlerListener)
         {
-            this._commandHandlerListener = commandHandlerListener;
+            this._commandMessageListener = commandHandlerListener;
         }
 
         public void Start()
         {
-            _commandHandlerListener.RegisterCommandHandler<StartComponentWorkCommand, StartCollectorComponentWorkCommandHandler>(CollectorComponentIdentifier);
-            _commandHandlerListener.RegisterCommandHandler<StartComponentCompensationCommand, StartCollectorComponentCompensationCommandHandler>(CollectorComponentIdentifier);
+            _commandMessageListener.RegisterCommandHandler<StartComponentWorkCommand, StartCollectorComponentWorkCommandHandler>(CollectorComponentIdentifier);
+            _commandMessageListener.RegisterCommandHandler<StartComponentCompensationCommand, StartCollectorComponentCompensationCommandHandler>(CollectorComponentIdentifier);
         }
     }
 }

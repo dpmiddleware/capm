@@ -48,11 +48,21 @@
     <Compile Include="ArchiverAutofacModule.cs" />
     <Compile Include="ArchiverComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartArchiverComponentCompensationCommandHandler.cs" />
+    <Compile Include="StartArchiverComponentWorkCommandHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\PoF.Common\PoF.Common.csproj">
       <Project>{46804729-e238-4c18-8417-dd93306a8ec8}</Project>
       <Name>PoF.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PoF.Messaging\PoF.Messaging.csproj">
+      <Project>{ECE62D1E-9045-4FC0-93DE-3E3375053205}</Project>
+      <Name>PoF.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PoF.StagingStore\PoF.StagingStore.csproj">
+      <Project>{8F733DFA-C3FA-46E6-BFF1-B80152A97F42}</Project>
+      <Name>PoF.StagingStore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

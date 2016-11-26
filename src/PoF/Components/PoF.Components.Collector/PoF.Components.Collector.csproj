@@ -64,6 +64,10 @@
       <Project>{8F733DFA-C3FA-46E6-BFF1-B80152A97F42}</Project>
       <Name>PoF.StagingStore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PoF.Components.Archiver\PoF.Components.Archiver.csproj">
+      <Project>{998c09e3-057a-4fd3-97bf-8417bfc90f9f}</Project>
+      <Name>PoF.Components.Archiver</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

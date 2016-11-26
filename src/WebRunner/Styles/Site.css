@@ -28,24 +28,31 @@ body {
 .all-views {
     display: flex;
     align-items: stretch;
-    justify-content:space-between;
+    justify-content: space-between;
     flex: 1 1 auto;
+    overflow:hidden;
 }
 
     .all-views > * {
         border: 1px inset #808080;
-        margin:0.4em;
-        overflow: auto; 
+        margin: 0.4em;
+        overflow: auto;
     }
 
 information-system {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
+    min-width: 20em;
 }
 
 preservation-system {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
+    min-width: 20em;
 }
 
 .capm-system {
     flex: 1 1 auto;
 }
+
+    .capm-system > pre {
+        white-space: pre-wrap;
+    }

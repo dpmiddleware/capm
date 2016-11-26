@@ -1,4 +1,5 @@
 ﻿using PoF.Common;
+using PoF.Common.Commands.IngestCommands;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,6 +21,8 @@ namespace PoF.Components.Archiver
 
         public void Start()
         {
+            _commandMessageListener.RegisterCommandHandler<StartComponentWorkCommand, StartArchiverComponentWorkCommandHandler>(ArchiverComponentIdentifier);
+            _commandMessageListener.RegisterCommandHandler<StartComponentCompensationCommand, StartArchiverComponentCompensationCommandHandler>(ArchiverComponentIdentifier);
         }
     }
 }

@@ -22,15 +22,9 @@ namespace PoF.Components.Collector
             this._messageSenderFactory = messageSenderFactory;
         }
 
-        private async Task<IComponentStagingStore> GetStore(Guid ingestId)
-        {
-            var ingestStore = await _stagingStoreContainer.GetStoreForContextIdAsync(ingestId);
-            return await ingestStore.GetComponentStagingStoreAsync(CollectorComponent.CollectorComponentIdentifier);
-        }
-
         public async Task Handle(StartComponentCompensationCommand command)
         {
-            var store = await GetStore(command.IngestId);
+            var store = await _stagingStoreContainer.GetSharedStore(command.IngestId);
             await store.RemoveItemAsync("downloadedfile");
             await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
             {

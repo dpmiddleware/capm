@@ -11,7 +11,8 @@ namespace PoF.Components.Archiver
     {
         protected override void Load(ContainerBuilder builder)
         {
-
+            builder.RegisterType<StartArchiverComponentWorkCommandHandler>().InstancePerDependency();
+            builder.RegisterType<StartArchiverComponentCompensationCommandHandler>().InstancePerDependency();
         }
     }
 }
