@@ -1,0 +1,5 @@
+﻿<div class="ingest-step" ng-class="{succeeded: $ctrl.step.wasSuccessful, failed: $ctrl.step.wasFailed, processing: $ctrl.isProcessing, 'not-started': !$ctrl.step.startedAt}">
+    <span>{{$ctrl.step.title}}</span>
+    <em ng-if="$ctrl.step.wasCompensationStep">Compensating</em>
+    <span>{{$ctrl.step.startedAt}}</span>
+</div>

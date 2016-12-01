@@ -118,6 +118,8 @@
     <Content Include="Scripts\Components\capm-ingest-details\capm-ingest-details.js" />
     <Content Include="Scripts\Components\capm-ingest-list\capm-ingest-list.html" />
     <Content Include="Scripts\Components\capm-ingest-list\capm-ingest-list.js" />
+    <Content Include="Scripts\Components\ingest-step\ingest-step.html" />
+    <Content Include="Scripts\Components\ingest-step\ingest-step.js" />
     <Content Include="Scripts\Components\preservation-system\preservation-system.html" />
     <Content Include="Scripts\Components\preservation-system\preservation-system.js" />
     <Content Include="Scripts\Components\information-system\information-system.html" />

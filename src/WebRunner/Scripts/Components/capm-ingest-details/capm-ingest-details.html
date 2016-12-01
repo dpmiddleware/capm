@@ -3,11 +3,33 @@
     Could not retrieve details for ingest with ID {{$ctrl.id}}. Perhaps the URL is incorrect?
 </p>
 <div ng-if="!$ctrl.couldNotGetDetails">
-    <ul>
-        <li ng-repeat="event in $ctrl.events">
-            <pre>{{$ctrl.stringify(event)}}</pre>
-        </li>
-    </ul>
+    <table>
+        <tr ng-repeat="plan in $ctrl.plans">
+            <td>
+                <ingest-step step="plan.isCompensationPlan ? $ctrl.completionStep : $ctrl.startStep"></ingest-step>
+            </td>
+            <td>
+                <i class="fa fa-arrow-left" ng-if="plan.isCompensationPlan"></i>
+                <i class="fa fa-arrow-right" ng-if="!plan.isCompensationPlan"></i>
+            </td>
+            <td ng-repeat-start="step in plan.steps">
+                <ingest-step step="step"></ingest-step>
+            </td>
+            <td ng-repeat-end="" ng-if="$index !== plan.steps.length - 1">
+                <i class="fa fa-arrow-right" ng-if="!plan.isCompensationPlan"></i>
+            </td>
+            <td ng-if="plan.isCompensationPlan" style="text-align:center">&nbsp;</td>
+            <td ng-if="plan.isCompensationPlan" style="text-align:center">
+                <i class="fa fa-level-down fa-2x fa-rotate-90"></i>
+            </td>
+            <td ng-if="!plan.isCompensationPlan && !$ctrl.hasCompensationPlan">
+                <i class="fa fa-arrow-right"></i>
+            </td>
+            <td ng-if="!plan.isCompensationPlan && !$ctrl.hasCompensationPlan">
+                <ingest-step step="$ctrl.completionStep"></ingest-step>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <a href="#/">Navigate to list</a>

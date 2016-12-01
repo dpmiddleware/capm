@@ -30,7 +30,7 @@ body {
     align-items: stretch;
     justify-content: space-between;
     flex: 1 1 auto;
-    overflow:hidden;
+    overflow: hidden;
 }
 
     .all-views > * {
@@ -55,4 +55,35 @@ preservation-system {
 
     .capm-system > pre {
         white-space: pre-wrap;
+    }
+
+.ingest-step {
+    border-radius: 0.5em;
+    display:flex;
+    flex-direction: column;
+    height: 3.5em;
+    padding: 0.25em;
+    border: 1px solid yellow;
+    margin:0.5em;
+}
+
+    .ingest-step.succeeded {
+        border-color: green;
+    }
+
+    .ingest-step.failed {
+        border-color: red;
+    }
+
+    .ingest-step.processing {
+        border-color: blue;
+    }
+
+    .ingest-step.not-started {
+        border-color: gray;
+        opacity:0.5;
+    }
+
+    .ingest-step > * {
+        flex: 1 0 auto;
     }

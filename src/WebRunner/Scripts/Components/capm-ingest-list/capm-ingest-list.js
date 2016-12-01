@@ -10,7 +10,7 @@
                 console.error(response);
             });
         }
-        setInterval(refreshList, 5000);
+        setInterval(refreshList, 2500);
         refreshList();
     }
 });
