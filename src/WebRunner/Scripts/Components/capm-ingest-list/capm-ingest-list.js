@@ -5,7 +5,11 @@
         self.ingests = [];
         function refreshList() {
             ingestEventService.getIngests().then(function (data) {
-                self.ingests = data;
+                for (let i = 0; i < data.length; i++) {
+                    if (!self.ingests.find(id => id === data[i].key)) {
+                        self.ingests.splice(0, 0, data[i].key);
+                    }
+                }
             }).catch(function (response) {
                 console.error(response);
             });

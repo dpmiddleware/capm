@@ -1,8 +1,10 @@
 ﻿angular.module('CaPM').component('capmIngestDetails', {
     templateUrl: 'Scripts/Components/capm-ingest-details/capm-ingest-details.html',
+    bindings: {
+        id: '='
+    },
     controller: function (ingestEventService, $routeParams) {
         var self = this;
-        self.id = $routeParams.id;
         self.plans = [];
         self.couldNotGetDetails = false;
         ingestEventService.getIngestEvents(this.id).then(function (data) {

@@ -1,5 +1,4 @@
-﻿<h1>Details for {{$ctrl.id}}</h1>
-<p ng-if="$ctrl.couldNotGetDetails">
+﻿<p ng-if="$ctrl.couldNotGetDetails">
     Could not retrieve details for ingest with ID {{$ctrl.id}}. Perhaps the URL is incorrect?
 </p>
 <div ng-if="!$ctrl.couldNotGetDetails">
@@ -31,5 +30,3 @@
         </tr>
     </table>
 </div>
-
-<a href="#/">Navigate to list</a>
