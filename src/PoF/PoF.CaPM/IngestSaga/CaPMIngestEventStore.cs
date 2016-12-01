@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PoF.CaPM.Serialization;
+using PoF.Messaging;
 
 namespace PoF.CaPM.IngestSaga
 {
@@ -21,7 +22,7 @@ namespace PoF.CaPM.IngestSaga
             this._ingestId = ingestId;
         }
 
-        public async Task StoreEvent(IIngestEvent eventObject)
+        public async Task StoreEvent(IIngestEvent eventObject, IMessageSender<SerializedEvent> ingestEventSender)
         {
             eventObject.IngestId = _ingestId;
             eventObject.Timestamp = GetTimestamp();
@@ -30,11 +31,13 @@ namespace PoF.CaPM.IngestSaga
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(_debug_SerializeToJsonString(serializedEvent));
 #endif
-            await _componentStagingStore.SetItemAsync(Guid.NewGuid().ToString(), serializedEvent.GetSerializedStream());
+            await _componentStagingStore.SetItemAsync(Guid.NewGuid().ToString(), serializedEvent.GetSerializedStream()).ConfigureAwait(false);
+            await ingestEventSender.Send(eventObject.ToSerializedEvent()).ConfigureAwait(false);
         }
 
 #if DEBUG
         private static readonly Newtonsoft.Json.JsonSerializer _debug_serializeToJsonStringSerializer = new Newtonsoft.Json.JsonSerializer();
+
         public string _debug_SerializeToJsonString(SerializedEvent serializedEvent)
         {
             using (var writer = new System.IO.StringWriter())

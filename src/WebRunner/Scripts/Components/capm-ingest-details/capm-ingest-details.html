@@ -1,9 +1,27 @@
-﻿<p ng-if="$ctrl.couldNotGetDetails">
-    Could not retrieve details for ingest with ID {{$ctrl.id}}. Perhaps the URL is incorrect?
-</p>
-<div ng-if="!$ctrl.couldNotGetDetails">
+﻿<div>
     <table>
-        <tr ng-repeat="plan in $ctrl.plans">
+        <tr>
+            <td ng-repeat-start="step in $ctrl.ingestPlan.steps">
+                <ingest-step step="step"></ingest-step>
+            </td>
+            <td ng-repeat-end="" ng-if="!$last">
+                <i class="fa fa-arrow-right" ng-class="{'inactive-path': !step.wasSuccessful}"></i>
+            </td>
+        </tr>
+        <tr ng-if="$ctrl.hasFailed()">
+            <td ng-repeat-start="step in $ctrl.compensationPlan.steps">
+                <ingest-step step="step"></ingest-step>
+            </td>
+            <td ng-repeat-end="">
+                <i class="fa fa-arrow-left" ng-class="{'inactive-path': !step.wasSuccessful}" ng-if="!$last"></i>
+                <span ng-if="$last">&nbsp</span>
+            </td>
+            <td style="text-align:center">
+                <i class="fa fa-level-down fa-2x fa-rotate-90"></i>
+            </td>
+        </tr>
+        <!--
+        <tr>
             <td>
                 <ingest-step step="plan.isCompensationPlan ? $ctrl.completionStep : $ctrl.startStep"></ingest-step>
             </td>
@@ -28,5 +46,6 @@
                 <ingest-step step="$ctrl.completionStep"></ingest-step>
             </td>
         </tr>
+            -->
     </table>
 </div>

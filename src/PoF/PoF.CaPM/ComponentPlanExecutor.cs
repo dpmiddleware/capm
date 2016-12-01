@@ -1,5 +1,6 @@
 ﻿using PoF.CaPM.IngestSaga;
 using PoF.CaPM.IngestSaga.Events;
+using PoF.CaPM.Serialization;
 using PoF.Common.Commands.IngestCommands;
 using PoF.Messaging;
 using PoF.StagingStore;
@@ -43,7 +44,7 @@ namespace PoF.CaPM
             }
             else
             {
-                await eventStore.StoreEvent(new IngestCompleted());
+                await eventStore.StoreEvent(new IngestCompleted(), _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             }
         }
 
@@ -66,7 +67,7 @@ namespace PoF.CaPM
             await eventStore.StoreEvent(new IngestComponentWorkStartRequested()
             {
                 CommandSent = command
-            });
+            }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             await messageChannel.Send(command);
         }
 
@@ -89,7 +90,7 @@ namespace PoF.CaPM
             await eventStore.StoreEvent(new IngestComponentCompensationStartRequested()
             {
                 CommandSent = command
-            });
+            }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             await messageChannel.Send(command);
         }
 

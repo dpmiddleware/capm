@@ -22,6 +22,7 @@ namespace PoF.Components.RandomError
 
         public async Task Handle(StartComponentWorkCommand command)
         {
+            await Task.Delay((int)(_randomizer.NextDouble() * 2 * 1000));
             if (_randomizer.NextDouble() > 0.5)
             { 
                 await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()

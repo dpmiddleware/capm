@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
-[assembly: OwinStartup(typeof(WebApplication4.Startup))]
+using System.Web.Http;
 
 namespace WebRunner
 {
@@ -11,7 +11,9 @@ namespace WebRunner
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+            AutofacConfig.Configure();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            app.MapSignalR();
         }
     }
 }

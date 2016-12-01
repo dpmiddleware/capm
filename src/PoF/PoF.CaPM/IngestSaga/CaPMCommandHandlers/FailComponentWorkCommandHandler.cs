@@ -1,6 +1,8 @@
 ﻿using PoF.CaPM.IngestSaga.Events;
+using PoF.CaPM.Serialization;
 using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
+using PoF.Messaging;
 using PoF.StagingStore;
 using System;
 using System.Collections.Generic;
@@ -14,11 +16,15 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
     {
         private IStagingStoreContainer _stagingStoreContainer;
         private IComponentPlanExecutor _componentPlanExecutor;
+        private IMessageSenderFactory _messageSenderFactory;
+        private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
 
-        public FailComponentWorkCommandHandler(IStagingStoreContainer stagingStoreContainer, IComponentPlanExecutor componentPlanExecutor)
+        public FailComponentWorkCommandHandler(IMessageSenderFactory messageSenderFactory, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, IStagingStoreContainer stagingStoreContainer, IComponentPlanExecutor componentPlanExecutor)
         {
             this._stagingStoreContainer = stagingStoreContainer;
             this._componentPlanExecutor = componentPlanExecutor;
+            this._messageSenderFactory = messageSenderFactory;
+            this._componentChannelIdentifierRepository = componentChannelIdentifierRepository;
         }
 
         public async Task Handle(FailComponentWorkCommand command)
@@ -30,7 +36,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
             {
                 ComponentExecutionId = command.ComponentExecutionId,
                 Reason = command.Reason
-            });
+            }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             var ingestPlan = new IngestPlanSet()
             {
                 IngestPlan = previousPlan.IngestPlan
@@ -46,7 +52,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
                     Order = (uint)index
                 }).ToArray()
             };
-            await eventStore.StoreEvent(ingestPlan);
+            await eventStore.StoreEvent(ingestPlan, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
         }
     }

@@ -9,7 +9,7 @@ namespace PoF.CaPM
 {
     public interface ICaPMEventStore
     {
-        //TODO: This method really needs to not return all events for all ingests, but not necessary for this POC
-        Task<KeyValuePair<Guid, IIngestEvent[]>[]> GetAllIngestEvents();
+        //TODO: This method really needs filter/page/other so that it does not return all events for all ingests, but not necessary for this POC
+        Task<IIngestEvent[]> GetAllIngestEvents();
     }
 }

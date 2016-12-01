@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace PoF.CaPM.IngestSaga.Events
 {
-    public interface IIngestEvent
+    public static class IngestEventConstants
     {
-        DateTimeOffset Timestamp { get; set; }
-        Guid IngestId { get; set; }
-        uint Order { get; set; }
+        public const string ChannelIdentifierCode = "CaPM.IIngestEvent";
     }
 }

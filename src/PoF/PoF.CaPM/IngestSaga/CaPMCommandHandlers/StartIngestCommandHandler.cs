@@ -1,7 +1,9 @@
 ﻿using PoF.CaPM.IngestSaga.Events;
+using PoF.CaPM.Serialization;
 using PoF.CaPM.SubmissionAgreements;
 using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
+using PoF.Messaging;
 using PoF.StagingStore;
 using System;
 using System.Collections.Generic;
@@ -17,12 +19,16 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
         private ISubmissionAgreementStore _submissionAgreementStore;
         private IStagingStoreContainer _stagingStoreContainer;
         private IComponentPlanExecutor _componentPlanExecutor;
+        private IMessageSenderFactory _messageSenderFactory;
+        private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
 
-        public StartIngestCommandHandler(ISubmissionAgreementStore submissionAgreementStore, IStagingStoreContainer stagingStoreContainer, IComponentPlanExecutor componentPlanExecutor)
+        public StartIngestCommandHandler(IMessageSenderFactory messageSenderFactory, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, ISubmissionAgreementStore submissionAgreementStore, IStagingStoreContainer stagingStoreContainer, IComponentPlanExecutor componentPlanExecutor)
         {
             this._submissionAgreementStore = submissionAgreementStore;
             this._stagingStoreContainer = stagingStoreContainer;
             this._componentPlanExecutor = componentPlanExecutor;
+            this._messageSenderFactory = messageSenderFactory;
+            this._componentChannelIdentifierRepository = componentChannelIdentifierRepository;
         }
 
         public async Task Handle(StartIngestCommand command)
@@ -48,9 +54,9 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
             };
             var eventStore = await CaPMIngestEventStore.CreateCaPMEventStore(_stagingStoreContainer, newIngestId);
 
-            await eventStore.StoreEvent(ingestStartedEvent);
-            await CreateIngestPlanBasedOnSubmissionAgreement(eventStore, submissionAgreement);
-            await _componentPlanExecutor.ExecuteNextComponentInPlan(newIngestId);
+            await eventStore.StoreEvent(ingestStartedEvent, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode))).ConfigureAwait(false);
+            await CreateIngestPlanBasedOnSubmissionAgreement(eventStore, submissionAgreement).ConfigureAwait(false);
+            await _componentPlanExecutor.ExecuteNextComponentInPlan(newIngestId).ConfigureAwait(false);
         }
 
         private async Task CreateIngestPlanBasedOnSubmissionAgreement(CaPMIngestEventStore eventStore, SubmissionAgreement submissionAgreement)
@@ -66,7 +72,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
                     Order = (uint)index
                 }).ToArray()
             };
-            await eventStore.StoreEvent(ingestPlan);
+            await eventStore.StoreEvent(ingestPlan, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
         }
     }
 }

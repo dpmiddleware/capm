@@ -12,7 +12,13 @@ namespace PoF.Messaging.InMemory
 {
     internal class InMemoryMessageChannel
     {
+        private ChannelIdentifier _channelIdentifier;
         private Subject<string> _subject = new Subject<string>();
+
+        public InMemoryMessageChannel(ChannelIdentifier channelIdentifier)
+        {
+            _channelIdentifier = channelIdentifier;
+        }
 
         public IObservable<string> GetChannelObservable()
         {

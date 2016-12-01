@@ -90,6 +90,7 @@
     <Compile Include="IngestSaga\Events\IngestComponentCompensationStartRequested.cs" />
     <Compile Include="IngestSaga\Events\IngestComponentWorkStartRequested.cs" />
     <Compile Include="IngestSaga\Events\IIngestEvent.cs" />
+    <Compile Include="IngestSaga\Events\IngestEventConstants.cs" />
     <Compile Include="IngestSaga\Events\IngestPlanSet.cs" />
     <Compile Include="IngestSaga\Events\IngestStarted.cs" />
     <Compile Include="CaPMSystem.cs" />

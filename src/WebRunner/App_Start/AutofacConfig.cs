@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using Microsoft.AspNet.SignalR;
 using PoF.CaPM;
 using PoF.CaPM.SubmissionAgreements;
 using PoF.Common;
@@ -12,6 +13,7 @@ using PoF.Messaging.InMemory;
 using PoF.StagingStore;
 using PoF.StagingStore.InMemory;
 using System.Reflection;
+using WebRunner.Controllers;
 
 namespace WebRunner
 {
@@ -27,6 +29,7 @@ namespace WebRunner
 
             var webApiResolver = new AutofacWebApiDependencyResolver(container);
             System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver = webApiResolver;
+            GlobalHost.DependencyResolver.Register(typeof(IngestEventsHub), () => container.Resolve<IngestEventsHub>());
         }
 
         private static void StartComponent<T>(IContainer container)
@@ -59,6 +62,8 @@ namespace WebRunner
             builder.RegisterType<InMemoryMessageSource>().As<IMessageSource>().SingleInstance();
             builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
             builder.Register(context => container).As<IContainer>().SingleInstance();
+
+            builder.RegisterType<IngestEventsHub>().InstancePerDependency();
 
             container = builder.Build();
             return container;

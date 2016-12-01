@@ -18,13 +18,13 @@ namespace PoF.CaPM
             _stagingStoreContainer = stagingStoreContainer;
         }
 
-        public async Task<KeyValuePair<Guid, IIngestEvent[]>[]> GetAllIngestEvents()
+        public async Task<IIngestEvent[]> GetAllIngestEvents()
         {
-            List<KeyValuePair<Guid, IIngestEvent[]>> results = new List<KeyValuePair<Guid, IIngestEvent[]>>();
+            List<IIngestEvent> results = new List<IngestSaga.Events.IIngestEvent>();
             foreach(var ingestId in await _stagingStoreContainer.GetStoredContextIds())
             {
                 var ingestEventStore = await CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, ingestId);
-                results.Add(new KeyValuePair<Guid, IngestSaga.Events.IIngestEvent[]>(ingestId, await ingestEventStore.GetStoredEvents()));
+                results.AddRange(await ingestEventStore.GetStoredEvents());
             }
             return results.ToArray();
         }

@@ -22,10 +22,14 @@ namespace PoF.StagingStore.InMemory
         }
 
         private Dictionary<string, LockableStream> _streams = new Dictionary<string, LockableStream>();
+        private static readonly Random _randomizer = new Random();
 
         public async Task<Stream> GetItemAsync(string identifier)
         {
             EnsureIdentifierIsValidFilename(identifier);
+            //Pretend this takes a little bit of time, to emulate a slower persistent store
+            await Task.Delay((int)(_randomizer.NextDouble() * 600)).ConfigureAwait(false);
+
             var stream = _streams[identifier];
             try
             {
@@ -51,6 +55,8 @@ namespace PoF.StagingStore.InMemory
         public async Task SetItemAsync(string identifier, Stream stream)
         {
             EnsureIdentifierIsValidFilename(identifier);
+            //Pretend this takes a little bit of time, to emulate a slower persistent store
+            await Task.Delay((int)(_randomizer.NextDouble() * 600)).ConfigureAwait(false);
             var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
             _streams[identifier] = new LockableStream(memoryStream);

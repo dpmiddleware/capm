@@ -25,7 +25,7 @@ namespace PoF.Messaging.InMemory
                 {
                     if (!_channels.ContainsKey(identifier))
                     {
-                        _channels[identifier] = new InMemoryMessageChannel();
+                        _channels[identifier] = new InMemoryMessageChannel(identifier);
                     }
                 }
             }

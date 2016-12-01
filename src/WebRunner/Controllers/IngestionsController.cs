@@ -15,35 +15,13 @@ namespace WebRunner.Controllers
 {
     public class IngestionsController : ApiController
     {
-        private ICaPMEventStore _capmEventStore;
         private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
         private IMessageSenderFactory _messageSenderFactory;
 
-        public IngestionsController(IMessageSenderFactory messageSenderFactory, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, ICaPMEventStore capmEventStore)
+        public IngestionsController(IMessageSenderFactory messageSenderFactory, IComponentChannelIdentifierRepository componentChannelIdentifierRepository)
         {
             _messageSenderFactory = messageSenderFactory;
             _componentChannelIdentifierRepository = componentChannelIdentifierRepository;
-            _capmEventStore = capmEventStore;
-        }
-
-        [HttpGet]
-        public async Task<KeyValuePair<Guid, IIngestEvent[]>[]> Get()
-        {
-            return await _capmEventStore.GetAllIngestEvents();
-        }
-
-        [HttpGet]
-        public async Task<IHttpActionResult> Get(Guid id)
-        {
-            var allIngestEvents = await _capmEventStore.GetAllIngestEvents();
-            if (allIngestEvents.Any(i => i.Key == id))
-            {
-                return Ok(allIngestEvents.First(i => i.Key == id).Value);
-            }
-            else
-            {
-                return NotFound();
-            }
         }
 
         [HttpPost]
