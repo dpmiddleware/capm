@@ -1,0 +1,34 @@
+﻿[
+  {
+    "SubmissionAgreementId": "Safe Agreement",
+    "ProcessComponents": [
+      {
+        "ComponentCode": "Component.Collector",
+        "Order": 1
+      },
+      {
+        "ComponentCode": "Component.Archiver",
+        "Order": 2,
+        "ComponentSettings": "http://localhost:59669/api/aips"
+      }
+    ]
+  },
+  {
+    "SubmissionAgreementId": "Volatile Agreement",
+    "ProcessComponents": [
+      {
+        "ComponentCode": "Component.Collector",
+        "Order": 1
+      },
+      {
+        "ComponentCode": "Component.RandomError",
+        "Order": 2
+      },
+      {
+        "ComponentCode": "Component.Archiver",
+        "Order": 3,
+        "ComponentSettings": "http://localhost:59669/api/aips"
+      }
+    ]
+  }
+]

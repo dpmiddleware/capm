@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.AspNet.SignalR;
+using Newtonsoft.Json;
 using PoF.CaPM;
 using PoF.CaPM.SubmissionAgreements;
 using PoF.Common;
@@ -12,6 +13,7 @@ using PoF.Messaging;
 using PoF.Messaging.InMemory;
 using PoF.StagingStore;
 using PoF.StagingStore.InMemory;
+using System.IO;
 using System.Reflection;
 using WebRunner.Controllers;
 
@@ -51,7 +53,7 @@ namespace WebRunner
             builder.RegisterModule<RandomErrorAutofacModule>();
 
             builder.RegisterType<FakeComponentChannelIdentifierRepository>().As<IComponentChannelIdentifierRepository>().SingleInstance();
-            builder.RegisterType<FakeSubmissionAgreementStore>().As<ISubmissionAgreementStore>().SingleInstance();
+            builder.Register(context => CreateSubmissionAgreementStore()).As<ISubmissionAgreementStore>().SingleInstance();
             builder.RegisterType<CaPMSystem>().SingleInstance();
             builder.RegisterType<CaPMEventStore>().As<ICaPMEventStore>().SingleInstance();
             builder.RegisterType<CollectorComponent>().SingleInstance();
@@ -67,6 +69,18 @@ namespace WebRunner
 
             container = builder.Build();
             return container;
+        }
+
+        private static ISubmissionAgreementStore CreateSubmissionAgreementStore()
+        {
+            var store = new InMemorySubmissionAgreementStore();
+            var agreementsString = File.ReadAllText(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "SubmissionAgreements.json"));
+            var agreements = JsonConvert.DeserializeObject<SubmissionAgreement[]>(agreementsString);
+            foreach(var agreement in agreements)
+            {
+                store.Add(agreement);
+            }
+            return store;
         }
     }
 }

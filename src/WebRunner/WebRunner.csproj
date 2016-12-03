@@ -177,6 +177,7 @@
     <Content Include="Dependencies\FontAwesome\4.7.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Dependencies\FontAwesome\4.7.0\fonts\fontawesome-webfont.woff2" />
     <Content Include="Dependencies\FontAwesome\4.7.0\fonts\FontAwesome.otf" />
+    <Content Include="SubmissionAgreements.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

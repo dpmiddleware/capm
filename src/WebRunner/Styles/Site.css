@@ -21,10 +21,6 @@ body {
         margin: 0.5em;
     }
 
-.hidden {
-    display: none;
-}
-
 .all-views {
     display: flex;
     align-items: stretch;
@@ -86,4 +82,12 @@ preservation-system {
 
     .ingest-step > * {
         flex: 1 0 auto;
-    }
+    }   
+
+.hidden {
+    display: none;
+}
+
+.shown {
+    display: flex;
+}

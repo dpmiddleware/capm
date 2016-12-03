@@ -97,6 +97,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\SerializedEvent.cs" />
     <Compile Include="Serialization\SerializedEventHelpers.cs" />
+    <Compile Include="SubmissionAgreements\InMemorySubmissionAgreementStore.cs" />
     <Compile Include="SubmissionAgreements\ISubmissionAgreementStore.cs" />
     <Compile Include="SubmissionAgreements\SubmissionAgreement.cs" />
   </ItemGroup>
