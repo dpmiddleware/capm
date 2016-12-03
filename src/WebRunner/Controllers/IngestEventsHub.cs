@@ -15,13 +15,6 @@ namespace WebRunner.Controllers
 {
     public class IngestEventsHub : Hub
     {
-        private ICaPMEventStore _capmEventStore;
-
-        public IngestEventsHub(ICaPMEventStore capmEventStore)
-        {
-            _capmEventStore = capmEventStore;
-        }
-
         static IngestEventsHub()
         {
             var messageSource = (IMessageSource)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IMessageSource));
@@ -31,14 +24,6 @@ namespace WebRunner.Controllers
             {
                 hubContext.Clients.All.onNewEvent(evt.GetEventObject());
             });
-        }
-
-        public async Task GetExistingEvents()
-        {
-            foreach(var evt in await _capmEventStore.GetAllIngestEvents())
-            {
-                Clients.Caller.onNewEvent(evt);
-            }
         }
     }
 }

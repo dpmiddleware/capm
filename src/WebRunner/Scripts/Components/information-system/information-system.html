@@ -1,9 +1,14 @@
 ﻿<h1>Information System</h1>
-<label for="agreementId">
-    Submission Agreement
-    <select ng-options="agreement.SubmissionAgreementId as agreement.SubmissionAgreementId for agreement in $ctrl.submissionAgreements" 
-            ng-model="$ctrl.selectedSubmissionAgreement"></select>
-</label>
-<h2>Using agreement id: {{ $ctrl.submissionAgreementId }}</h2>
-<input type="text" ng-model="$ctrl.downloadUrl"/>
-<button ng-click="$ctrl.submit()">Submit</button>
+<form ng-submit="$ctrl.submit()">
+    <label for="agreementId">
+        Submission Agreement:
+        <select ng-options="agreement.SubmissionAgreementId as agreement.SubmissionAgreementId for agreement in $ctrl.submissionAgreements"
+                ng-model="$ctrl.selectedSubmissionAgreement"
+                id="agreementId"></select>
+    </label>
+    <label for="data">
+        Image Url to submit:
+        <input id="data" type="text" ng-model="$ctrl.downloadUrl" />
+    </label>
+    <button>Submit</button>
+</form>

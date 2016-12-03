@@ -17,11 +17,19 @@ namespace WebRunner.Controllers
     {
         private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
         private IMessageSenderFactory _messageSenderFactory;
+        private ICaPMEventStore _capmEventStore;
 
-        public IngestionsController(IMessageSenderFactory messageSenderFactory, IComponentChannelIdentifierRepository componentChannelIdentifierRepository)
+        public IngestionsController(ICaPMEventStore capmEventStore, IMessageSenderFactory messageSenderFactory, IComponentChannelIdentifierRepository componentChannelIdentifierRepository)
         {
             _messageSenderFactory = messageSenderFactory;
             _componentChannelIdentifierRepository = componentChannelIdentifierRepository;
+            _capmEventStore = capmEventStore;
+        }
+
+        [HttpGet]
+        public Task<IIngestEvent[]> Get()
+        {
+            return _capmEventStore.GetAllIngestEvents();
         }
 
         [HttpPost]

@@ -7,6 +7,7 @@
         var self = this;
         self.ingestPlan = [];
         self.compensationPlan = [];
+        var hasEventsChangedSinceLastPlanRead = false;
         var events = [];
         function gatherEvents(gatherFunc, eventType, componentExecutionIdOrPredicate){
             if (!componentExecutionIdOrPredicate){componentExecutionIdOrPredicate = () => true;}
@@ -76,12 +77,27 @@
                 wasCompensationStep: false
             };
             self.ingestPlan.steps.splice(0, 0, startStep);
+            hasEventsChangedSinceLastPlanRead = false;
         }
+        var planReadingHandle = null;
         ingestEventService.onNewIngestEvents(evt => evt.ingestId === self.id, evt => {
-            //TODO: In case events come out of order we need to ensure we add them to the array in order
-            self.id === self.id;
+            //TODO: In case events come out of order we should ensure we add them to the array in order, but we're not doing that yet
             events.push(evt);
-            readPlans();
+            hasEventsChangedSinceLastPlanRead = true;
         });
+
+        self.getIngestPlan = function () {
+            if (hasEventsChangedSinceLastPlanRead) {
+                readPlans();
+            }
+            return self.ingestPlan;
+        }
+
+        self.getCompensationPlan = function () {
+            if (hasEventsChangedSinceLastPlanRead) {
+                readPlans();
+            }
+            return self.compensationPlan;
+        }
     }
 });

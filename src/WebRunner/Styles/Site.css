@@ -84,6 +84,10 @@ preservation-system {
         flex: 1 0 auto;
     }   
 
+label > * {
+    display:block;
+}
+
 .hidden {
     display: none;
 }

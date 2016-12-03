@@ -1,7 +1,7 @@
 ﻿<div>
     <table>
         <tr>
-            <td ng-repeat-start="step in $ctrl.ingestPlan.steps">
+            <td ng-repeat-start="step in $ctrl.getIngestPlan().steps">
                 <ingest-step step="step"></ingest-step>
             </td>
             <td ng-repeat-end="" ng-if="!$last">
@@ -9,7 +9,7 @@
             </td>
         </tr>
         <tr ng-if="$ctrl.hasFailed()">
-            <td ng-repeat-start="step in $ctrl.compensationPlan.steps">
+            <td ng-repeat-start="step in $ctrl.getCompensationPlan().steps">
                 <ingest-step step="step"></ingest-step>
             </td>
             <td ng-repeat-end="">
@@ -20,32 +20,5 @@
                 <i class="fa fa-level-down fa-2x fa-rotate-90"></i>
             </td>
         </tr>
-        <!--
-        <tr>
-            <td>
-                <ingest-step step="plan.isCompensationPlan ? $ctrl.completionStep : $ctrl.startStep"></ingest-step>
-            </td>
-            <td>
-                <i class="fa fa-arrow-left" ng-if="plan.isCompensationPlan"></i>
-                <i class="fa fa-arrow-right" ng-if="!plan.isCompensationPlan"></i>
-            </td>
-            <td ng-repeat-start="step in plan.steps">
-                <ingest-step step="step"></ingest-step>
-            </td>
-            <td ng-repeat-end="" ng-if="$index !== plan.steps.length - 1">
-                <i class="fa fa-arrow-right" ng-if="!plan.isCompensationPlan"></i>
-            </td>
-            <td ng-if="plan.isCompensationPlan" style="text-align:center">&nbsp;</td>
-            <td ng-if="plan.isCompensationPlan" style="text-align:center">
-                <i class="fa fa-level-down fa-2x fa-rotate-90"></i>
-            </td>
-            <td ng-if="!plan.isCompensationPlan && !$ctrl.hasCompensationPlan">
-                <i class="fa fa-arrow-right"></i>
-            </td>
-            <td ng-if="!plan.isCompensationPlan && !$ctrl.hasCompensationPlan">
-                <ingest-step step="$ctrl.completionStep"></ingest-step>
-            </td>
-        </tr>
-            -->
     </table>
 </div>
