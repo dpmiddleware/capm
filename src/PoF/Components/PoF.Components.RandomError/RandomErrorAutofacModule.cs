@@ -12,6 +12,7 @@ namespace PoF.Components.RandomError
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<StartRandomErrorComponentWorkCommandHandler>().InstancePerDependency();
+            builder.RegisterType<StartRandomErrorComponentCompensationCommandHandler>().InstancePerDependency();
         }
     }
 }

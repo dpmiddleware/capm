@@ -20,6 +20,7 @@ using System.Configuration;
 using System.IO;
 using System.Reflection;
 using WebRunner.Controllers;
+using WebRunner.Services;
 
 namespace WebRunner
 {
@@ -66,8 +67,10 @@ namespace WebRunner
             builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
             builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
             builder.RegisterType<InMemoryMessageSource>().As<IMessageSource>().SingleInstance();
-            ConfigureAzureBlobStorageStagingStore(builder);
+            ConfigureStagingStore(builder);
             builder.Register(context => container).As<IContainer>().SingleInstance();
+
+            ConfigureAipStore(builder);
 
             builder.RegisterType<IngestEventsHub>().InstancePerDependency();
 
@@ -75,21 +78,52 @@ namespace WebRunner
             return container;
         }
 
+        private static void ConfigureStagingStore(ContainerBuilder builder)
+        {
+            if (string.IsNullOrWhiteSpace(AzureStorageConnectionString))
+            {
+                ConfigureInMemoryStagingStore(builder);
+            }
+            else
+            {
+                ConfigureAzureBlobStorageStagingStore(builder);
+            }
+        }
+
+        private static void ConfigureAipStore(ContainerBuilder builder)
+        {
+            IAipStore store;
+            var connectionString = AzureStorageConnectionString;
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                store = new InMemoryAipStore();
+            }
+            else
+            {
+                var blobAipStore = new AzureBlobStorageAipStore(connectionString);
+                store = blobAipStore;
+                blobAipStore.Initialize().Wait();
+            }
+            builder.Register(context => store).As<IAipStore>().SingleInstance();
+        }
+
         private static void ConfigureInMemoryStagingStore(ContainerBuilder builder)
         {
             builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
         }
 
+        private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
+
         private static void ConfigureAzureBlobStorageStagingStore(ContainerBuilder builder)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"].ConnectionString;
+            var connectionString = AzureStorageConnectionString;
             if (string.IsNullOrWhiteSpace(connectionString))
             {
                 throw new Exception("Invalid configuration. Missing connection string with name 'AzureBlobStorageStagingStoreConnectionString'.");
             }
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-            builder.Register(context => new AzureBlobStorageStagingStoreContainer(cloudBlobClient)).As<IStagingStoreContainer>();
+            builder.Register(context => new AzureBlobStorageStagingStoreContainer(cloudBlobClient)).As<IStagingStoreContainer>().SingleInstance();
         }
 
         private static ISubmissionAgreementStore CreateSubmissionAgreementStore()

@@ -25,7 +25,8 @@ namespace PoF.Components.Collector
         public async Task Handle(StartComponentCompensationCommand command)
         {
             var store = await _stagingStoreContainer.GetSharedStore(command.IngestId);
-            await store.RemoveItemAsync("downloadedfile");
+            await store.RemoveItemAsync("downloadedfile-bytes");
+            await store.RemoveItemAsync("downloadedfile-contenttype");
             await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
             {
                 ComponentExecutionId = command.ComponentExecutionId,

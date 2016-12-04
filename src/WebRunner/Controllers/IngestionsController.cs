@@ -29,7 +29,9 @@ namespace WebRunner.Controllers
         [HttpGet]
         public async Task<IIngestEvent[]> Get()
         {
-            return await _capmEventStore.GetAllIngestEvents().ConfigureAwait(false);
+            var events = await _capmEventStore.GetAllIngestEvents().ConfigureAwait(false);
+            var sortedEvents = events.OrderBy(e => e.Timestamp).ToArray();
+            return sortedEvents;
         }
 
         [HttpPost]

@@ -4,5 +4,8 @@
         .when('/', {
             template: '<capm-ingest-list></capm-ingest-list>'
         })
-        .otherwise('list');
+        .when('/:id', {
+            template: '<capm-ingest-details-data></capm-ingest-details-data>'
+        })
+        .otherwise('/');
 });

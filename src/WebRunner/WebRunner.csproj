@@ -161,6 +161,8 @@
     <Content Include="Dependencies\FontAwesome\4.7.0\fonts\fontawesome-webfont.svg" />
     <Content Include="index.html" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\Components\capm-ingest-details-data\capm-ingest-details-data.html" />
+    <Content Include="Scripts\Components\capm-ingest-details-data\capm-ingest-details-data.js" />
     <Content Include="Scripts\Components\capm-ingest-details\capm-ingest-details.html" />
     <Content Include="Scripts\Components\capm-ingest-details\capm-ingest-details.js" />
     <Content Include="Scripts\Components\capm-ingest-list\capm-ingest-list.html" />
@@ -185,10 +187,14 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AipsController.cs" />
     <Compile Include="Controllers\IngestEventsHub.cs" />
+    <Compile Include="Models\Aip.cs" />
     <Compile Include="Models\StartIngestionModel.cs" />
     <Compile Include="Controllers\IngestionsController.cs" />
     <Compile Include="Controllers\SubmissionAgreementsController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AzureBlobStorageAipStore.cs" />
+    <Compile Include="Services\IAipStore.cs" />
+    <Compile Include="Services\InMemoryAipStore.cs" />
     <Compile Include="Startup.cs" />
     <Content Include="Scripts\Services\IngestEventService.js" />
   </ItemGroup>
