@@ -56,9 +56,9 @@ namespace PoF.CaPM.IngestSaga
             var identifiers = await _componentStagingStore.GetAvailableIdentifiersAsync();
             var events = await Task.WhenAll(identifiers.Select(async id =>
             {
-                var item = await _componentStagingStore.GetItemAsync(id);
+                var item = await _componentStagingStore.GetItemAsync(id).ConfigureAwait(false);
                 return item.ReadSerializedEvent();
-            }));
+            })).ConfigureAwait(false);
             return events.OrderBy(e => e.Timestamp).ToArray();
         }
 

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.AspNet.SignalR;
+using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
 using PoF.CaPM;
 using PoF.CaPM.SubmissionAgreements;
@@ -12,7 +13,10 @@ using PoF.FakeImplementations;
 using PoF.Messaging;
 using PoF.Messaging.InMemory;
 using PoF.StagingStore;
+using PoF.StagingStore.Azure;
 using PoF.StagingStore.InMemory;
+using System;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using WebRunner.Controllers;
@@ -62,13 +66,30 @@ namespace WebRunner
             builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
             builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
             builder.RegisterType<InMemoryMessageSource>().As<IMessageSource>().SingleInstance();
-            builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
+            ConfigureAzureBlobStorageStagingStore(builder);
             builder.Register(context => container).As<IContainer>().SingleInstance();
 
             builder.RegisterType<IngestEventsHub>().InstancePerDependency();
 
             container = builder.Build();
             return container;
+        }
+
+        private static void ConfigureInMemoryStagingStore(ContainerBuilder builder)
+        {
+            builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
+        }
+
+        private static void ConfigureAzureBlobStorageStagingStore(ContainerBuilder builder)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"].ConnectionString;
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new Exception("Invalid configuration. Missing connection string with name 'AzureBlobStorageStagingStoreConnectionString'.");
+            }
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var cloudBlobClient = storageAccount.CreateCloudBlobClient();
+            builder.Register(context => new AzureBlobStorageStagingStoreContainer(cloudBlobClient)).As<IStagingStoreContainer>();
         }
 
         private static ISubmissionAgreementStore CreateSubmissionAgreementStore()

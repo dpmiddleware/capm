@@ -24,7 +24,7 @@ namespace PoF.CaPM
             foreach(var ingestId in await _stagingStoreContainer.GetStoredContextIds())
             {
                 var ingestEventStore = await CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, ingestId);
-                results.AddRange(await ingestEventStore.GetStoredEvents());
+                results.AddRange(await ingestEventStore.GetStoredEvents().ConfigureAwait(false));
             }
             return results.ToArray();
         }

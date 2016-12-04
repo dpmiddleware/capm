@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRunner", "WebRunner\WebR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoF.Components.RandomError", "PoF\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj", "{433EA217-173E-4ED1-A8AE-E2D9EBF12602}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoF.StagingStore.Azure", "PoF\PoF.StagingStore.Azure\PoF.StagingStore.Azure.csproj", "{86E888EC-CB69-49F6-A8AB-A28B171EE2AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{433EA217-173E-4ED1-A8AE-E2D9EBF12602}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E888EC-CB69-49F6-A8AB-A28B171EE2AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E888EC-CB69-49F6-A8AB-A28B171EE2AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E888EC-CB69-49F6-A8AB-A28B171EE2AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E888EC-CB69-49F6-A8AB-A28B171EE2AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,5 +97,6 @@ Global
 		{ECE62D1E-9045-4FC0-93DE-3E3375053205} = {5EE99293-336B-4E65-B154-3638F79A4502}
 		{6EFEB351-7A71-43BA-A329-752E16B06634} = {5EE99293-336B-4E65-B154-3638F79A4502}
 		{433EA217-173E-4ED1-A8AE-E2D9EBF12602} = {CF8F0889-EE99-49F1-ACB5-A77475A364AD}
+		{86E888EC-CB69-49F6-A8AB-A28B171EE2AF} = {5EE99293-336B-4E65-B154-3638F79A4502}
 	EndGlobalSection
 EndGlobal

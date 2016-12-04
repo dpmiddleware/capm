@@ -24,6 +24,7 @@ namespace PoF.Components.RandomError
         public void Start()
         {
             _commandHandlerListener.RegisterCommandHandler<StartComponentWorkCommand, StartRandomErrorComponentWorkCommandHandler>(RandomErrorComponentIdentifier);
+            _commandHandlerListener.RegisterCommandHandler<StartComponentCompensationCommand, StartRandomErrorComponentCompensationCommandHandler>(RandomErrorComponentIdentifier);
         }
     }
 }

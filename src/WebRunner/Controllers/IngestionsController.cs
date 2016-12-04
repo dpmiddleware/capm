@@ -27,9 +27,9 @@ namespace WebRunner.Controllers
         }
 
         [HttpGet]
-        public Task<IIngestEvent[]> Get()
+        public async Task<IIngestEvent[]> Get()
         {
-            return _capmEventStore.GetAllIngestEvents();
+            return await _capmEventStore.GetAllIngestEvents().ConfigureAwait(false);
         }
 
         [HttpPost]
