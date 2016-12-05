@@ -52,7 +52,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
                 IngestParameters = command.IngestParameters,
                 ExternalContextId = command.ExternalContextId
             };
-            var eventStore = await CaPMIngestEventStore.CreateCaPMEventStore(_stagingStoreContainer, newIngestId);
+            var eventStore = await CaPMIngestEventStore.CreateCaPMEventStore(_stagingStoreContainer, newIngestId).ConfigureAwait(false);
 
             await eventStore.StoreEvent(ingestStartedEvent, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode))).ConfigureAwait(false);
             await CreateIngestPlanBasedOnSubmissionAgreement(eventStore, submissionAgreement).ConfigureAwait(false);

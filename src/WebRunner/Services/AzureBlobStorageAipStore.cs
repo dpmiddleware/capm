@@ -38,23 +38,24 @@ namespace WebRunner.Services
             this._isInitialized = true;
         }
 
-        private void EnsureInitialized()
+        private async Task EnsureInitialized()
         {
             if (!_isInitialized)
             {
                 throw new Exception("The AzureBlobStorageAipStore needs to be initialized before it can be used");
             }
+            await this._container.CreateIfNotExistsAsync().ConfigureAwait(false);
         }
 
-        public Task<bool> Exists(string id)
+        public async Task<bool> Exists(string id)
         {
-            EnsureInitialized();
-            return _container.GetBlobReference(id).ExistsAsync();
+            await EnsureInitialized().ConfigureAwait(false);
+            return await _container.GetBlobReference(id).ExistsAsync().ConfigureAwait(false);
         }
 
         public async Task<Aip> Get(string id)
         {
-            EnsureInitialized();
+            await EnsureInitialized().ConfigureAwait(false);
             var blobReference = _container.GetBlockBlobReference(id);
             using (var streamReader = new StreamReader(await blobReference.OpenReadAsync().ConfigureAwait(false)))
             {
@@ -65,15 +66,15 @@ namespace WebRunner.Services
             }
         }
 
-        public Task<string[]> GetAllStoredIds()
+        public async Task<string[]> GetAllStoredIds()
         {
-            EnsureInitialized();
-            return Task.FromResult(_container.ListBlobs(useFlatBlobListing: true).OfType<CloudBlockBlob>().Select(b => b.Name).ToArray());
+            await EnsureInitialized().ConfigureAwait(false);
+            return _container.ListBlobs(useFlatBlobListing: true).OfType<CloudBlockBlob>().Select(b => b.Name).ToArray();
         }
 
         public async Task<string> Store(Aip aip)
         {
-            EnsureInitialized();
+            await EnsureInitialized().ConfigureAwait(false);
             var newId = Guid.NewGuid().ToString();
             while (await Exists(newId))
             {

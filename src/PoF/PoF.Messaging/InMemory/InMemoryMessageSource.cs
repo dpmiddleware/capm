@@ -11,19 +11,22 @@ namespace PoF.Messaging.InMemory
     {
         public IObservable<T> GetChannel<T>(ChannelIdentifier identifier)
         {
+            var type = typeof(T);
             var channel = InMemoryMessageChannelProvider.Instance.GetChannel(identifier);
-            return channel.GetChannelObservable().Select(s =>
-            {
-                T output;
-                var result = InMemoryMessageXmlSerializer.Instance.TryDeserialize<T>(s, out output);
-                return new
+            return channel.GetChannelObservable()
+                .Where(t => t.Contains(type.Name))
+                .Select(s =>
                 {
-                    CouldDeserializeToT = result,
-                    Output = output
-                };
-            })
-            .Where(m => m.CouldDeserializeToT)
-            .Select(m => m.Output); ;
+                    T output;
+                    var result = InMemoryMessageXmlSerializer.Instance.TryDeserialize<T>(s, out output);
+                    return new
+                    {
+                        CouldDeserializeToT = result,
+                        Output = output
+                    };
+                })
+                .Where(m => m.CouldDeserializeToT)
+                .Select(m => m.Output); ;
         }
     }
 }

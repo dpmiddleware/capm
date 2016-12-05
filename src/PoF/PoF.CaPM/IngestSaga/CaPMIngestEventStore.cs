@@ -64,7 +64,7 @@ namespace PoF.CaPM.IngestSaga
 
         public async Task<uint> GetNumberOfStoredEvents()
         {
-            var identifiers = await _componentStagingStore.GetAvailableIdentifiersAsync();
+            var identifiers = await _componentStagingStore.GetAvailableIdentifiersAsync().ConfigureAwait(false);
             return (uint)identifiers.Count();
         }
 
@@ -75,14 +75,14 @@ namespace PoF.CaPM.IngestSaga
 
         public static async Task<CaPMIngestEventStore> CreateCaPMEventStore(IStagingStoreContainer stagingStoreContainer, Guid ingestId)
         {
-            await stagingStoreContainer.CreateStoreForContextIdAsync(ingestId);
-            return await GetCaPMEventStore(stagingStoreContainer, ingestId);
+            await stagingStoreContainer.CreateStoreForContextIdAsync(ingestId).ConfigureAwait(false);
+            return await GetCaPMEventStore(stagingStoreContainer, ingestId).ConfigureAwait(false);
         }
 
         public static async Task<CaPMIngestEventStore> GetCaPMEventStore(IStagingStoreContainer stagingStoreContainer, Guid ingestId)
         {
-            var stagingStore = await stagingStoreContainer.GetStoreForContextIdAsync(ingestId);
-            var capmComponentStore = await stagingStore.GetComponentStagingStoreAsync(CaPMComponentStagingStoreID);
+            var stagingStore = await stagingStoreContainer.GetStoreForContextIdAsync(ingestId).ConfigureAwait(false);
+            var capmComponentStore = await stagingStore.GetComponentStagingStoreAsync(CaPMComponentStagingStoreID).ConfigureAwait(false);
             return new CaPMIngestEventStore(capmComponentStore, ingestId);
         }
     }
