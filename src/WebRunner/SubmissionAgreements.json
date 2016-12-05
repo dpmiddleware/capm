@@ -9,7 +9,7 @@
       {
         "ComponentCode": "Component.Archiver",
         "Order": 2,
-        "ComponentSettings": "https://capm.azurewebsites.net/api/aips"
+        "ComponentSettings": "http://localhost:59669/api/aips"
       }
     ]
   },
@@ -27,7 +27,7 @@
       {
         "ComponentCode": "Component.Archiver",
         "Order": 3,
-        "ComponentSettings": "https://capm.azurewebsites.net/api/aips"
+        "ComponentSettings": "http://localhost:59669/api/aips"
       }
     ]
   }

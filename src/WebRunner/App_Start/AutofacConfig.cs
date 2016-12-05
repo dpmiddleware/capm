@@ -125,7 +125,9 @@ namespace WebRunner
             }
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-            builder.Register(context => new AzureBlobStorageStagingStoreContainer(cloudBlobClient)).As<IStagingStoreContainer>().SingleInstance();
+            var stagingStoreContainer = new CachingStagingStoreContainerDecorator(new AzureBlobStorageStagingStoreContainer(cloudBlobClient));
+            stagingStoreContainer.PopulateCache().Wait();
+            builder.Register(context => stagingStoreContainer).As<IStagingStoreContainer>().SingleInstance();
         }
 
         private static ISubmissionAgreementStore CreateSubmissionAgreementStore()

@@ -71,6 +71,9 @@
     <Compile Include="AzureBlobStorageComponentStagingStore.cs" />
     <Compile Include="AzureBlobStorageStagingStore.cs" />
     <Compile Include="AzureBlobStorageStagingStoreContainer.cs" />
+    <Compile Include="CachingComponentStagingStore.cs" />
+    <Compile Include="CachingStagingStore.cs" />
+    <Compile Include="CachingStagingStoreContainerDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
