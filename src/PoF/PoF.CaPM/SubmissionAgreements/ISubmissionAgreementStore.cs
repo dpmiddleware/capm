@@ -9,5 +9,6 @@ namespace PoF.CaPM.SubmissionAgreements
     public interface ISubmissionAgreementStore
     {
         SubmissionAgreement Get(string id);
+        string[] GetAllIds();
     }
 }

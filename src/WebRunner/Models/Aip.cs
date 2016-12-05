@@ -9,5 +9,6 @@ namespace WebRunner.Models
     {
         public string ContentType { get; set; }
         public byte[] Bytes { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
     }
 }

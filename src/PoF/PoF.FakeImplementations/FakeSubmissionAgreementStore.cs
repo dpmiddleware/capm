@@ -67,5 +67,10 @@ namespace PoF.FakeImplementations
                 throw new KeyNotFoundException($"Could not find any submission agreement with the ID {id}.");
             }
         }
+
+        public string[] GetAllIds()
+        {
+            return _submissionAgreements.Keys.ToArray();
+        }
     }
 }

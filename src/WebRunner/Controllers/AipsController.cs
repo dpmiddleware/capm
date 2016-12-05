@@ -17,18 +17,19 @@ namespace WebRunner.Controllers
 
         public AipsController(IAipStore store)
         {
-            _store = store;
-            
+            _store = store;            
         }
 
         [HttpPost]
         public async Task Post()
         {
-            await _store.Store(new Aip()
+            var newId = await _store.Store(new Aip()
             {
                 ContentType = Request.Content.Headers.ContentType.ToString(),
-                Bytes = await Request.Content.ReadAsByteArrayAsync()
+                Bytes = await Request.Content.ReadAsByteArrayAsync(),
+                Timestamp = DateTimeOffset.UtcNow
             });
+            PreservationSystemHub.OnNewAip(newId);
         }
 
         [HttpGet]

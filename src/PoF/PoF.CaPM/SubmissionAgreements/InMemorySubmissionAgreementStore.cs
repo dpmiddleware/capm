@@ -30,5 +30,10 @@ namespace PoF.CaPM.SubmissionAgreements
             }
             _submissionAgreements.Add(submissionAgreement.SubmissionAgreementId, submissionAgreement);
         }
+
+        public string[] GetAllIds()
+        {
+            return _submissionAgreements.Keys.ToArray();
+        }
     }
 }

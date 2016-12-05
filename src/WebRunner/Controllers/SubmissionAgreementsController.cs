@@ -20,13 +20,7 @@ namespace WebRunner.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            yield return "SubmissionAgreement1";
-        }
-
-        [HttpGet]
-        public SubmissionAgreement Get(string id)
-        {
-            return _submissionAgreementStore.Get(id);
+            return _submissionAgreementStore.GetAllIds();
         }
     }
 }

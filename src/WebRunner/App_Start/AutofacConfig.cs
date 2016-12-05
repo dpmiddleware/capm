@@ -37,6 +37,7 @@ namespace WebRunner
             var webApiResolver = new AutofacWebApiDependencyResolver(container);
             System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver = webApiResolver;
             GlobalHost.DependencyResolver.Register(typeof(IngestEventsHub), () => container.Resolve<IngestEventsHub>());
+            GlobalHost.DependencyResolver.Register(typeof(PreservationSystemHub), () => container.Resolve<PreservationSystemHub>());
         }
 
         private static void StartComponent<T>(IContainer container)

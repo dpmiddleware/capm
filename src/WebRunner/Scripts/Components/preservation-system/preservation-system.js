@@ -1,24 +1,14 @@
 ﻿angular.module('CaPM').component('preservationSystem', {
     templateUrl: 'Scripts/Components/preservation-system/preservation-system.html',
-    controller: function ($http) {
+    controller: function (preservationService, $scope) {
         var self = this;
         self.aips = [];
-        function refresh() {
-            $http({ method: 'GET', url: '/api/aips', contentType: 'application/json' })
-                .then(function successCallback(response) {
-                    for (var i = 0; i < response.data.length; i++) {
-                        var url = '/api/aips/' + response.data[i];
-                        if (!self.aips.find(aip => aip.url === url)) {
-                            self.aips.push({
-                                url: url
-                            });
-                        }
-                    }
-                }).catch(function (response) {
-                    console.error(response);
+        preservationService.addNewAipListener(aipId => {
+            $scope.$apply(function () {
+                self.aips.splice(0, 0, {
+                    url: '/api/aips/' + aipId
                 });
-        }
-        refresh();
-        setInterval(refresh, 2500);
+            });
+        });
     }
 });

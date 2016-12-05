@@ -20,7 +20,7 @@
             }
         };
 
-        $http({ method: 'GET', url: '/SubmissionAgreements.json' })
+        $http({ method: 'GET', url: '/api/submissionagreements' })
             .then(function successCallback(response) {
                 self.submissionAgreements = response.data;
                 self.selectedSubmissionAgreement = self.submissionAgreements.length > 0 ? self.submissionAgreements[0].SubmissionAgreementId : null;
