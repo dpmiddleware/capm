@@ -74,6 +74,7 @@ namespace WebRunner
             ConfigureAipStore(builder);
 
             builder.RegisterType<IngestEventsHub>().InstancePerDependency();
+            builder.RegisterType<PreservationSystemHub>().InstancePerDependency();
 
             container = builder.Build();
             return container;
