@@ -2,7 +2,7 @@
 <form ng-submit="$ctrl.submit()">
     <label for="agreementId">
         Submission Agreement:
-        <select ng-options="agreement.SubmissionAgreementId as agreement.SubmissionAgreementId for agreement in $ctrl.submissionAgreements"
+        <select ng-options="agreement for agreement in $ctrl.submissionAgreements"
                 ng-model="$ctrl.selectedSubmissionAgreement"
                 id="agreementId"></select>
     </label>
