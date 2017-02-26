@@ -13,6 +13,7 @@ namespace PoF.Components.RandomError
         {
             builder.RegisterType<StartRandomErrorComponentWorkCommandHandler>().InstancePerDependency();
             builder.RegisterType<StartRandomErrorComponentCompensationCommandHandler>().InstancePerDependency();
+            builder.RegisterType<RandomErrorComponent>().SingleInstance();
         }
     }
 }

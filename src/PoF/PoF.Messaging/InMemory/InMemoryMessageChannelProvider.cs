@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PoF.Messaging.InMemory
 {
-    internal class InMemoryMessageChannelProvider
+    public class InMemoryMessageChannelProvider : IChannelProvider
     {
         private Dictionary<ChannelIdentifier, InMemoryMessageChannel> _channels;
         private object _channelCreationLockObject;
@@ -17,7 +17,7 @@ namespace PoF.Messaging.InMemory
             _channelCreationLockObject = new object();
         }
         
-        public InMemoryMessageChannel GetChannel(ChannelIdentifier identifier)
+        internal InMemoryMessageChannel GetChannel(ChannelIdentifier identifier)
         {
             if (!_channels.ContainsKey(identifier))
             {
@@ -30,6 +30,11 @@ namespace PoF.Messaging.InMemory
                 }
             }
             return _channels[identifier];
+        }
+
+        public IMessageSource<T> GetMessageSource<T>(ChannelIdentifier identifier)
+        {
+            return new InMemoryMessageSource<T>(GetChannel(identifier));
         }
 
         public static InMemoryMessageChannelProvider Instance { get; } = new InMemoryMessageChannelProvider();

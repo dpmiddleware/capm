@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PoF.Messaging
 {
-    public interface IMessageSource
+    public interface IMessageSource<T>
     {
-        IObservable<T> GetChannel<T>(ChannelIdentifier identifier);
+        IObservable<T> GetChannel();
     }
 }

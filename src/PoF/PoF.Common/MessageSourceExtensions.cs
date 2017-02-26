@@ -13,13 +13,13 @@ namespace PoF.Common
 {
     public static class MessageSourceExtensions
     {
-        public static IDisposable RegisterCommandHandler<Command, CommandHandler>(this IMessageSource messageSource, ChannelIdentifier channelIdentifier, IContainer iocContainer)
+        public static IDisposable RegisterCommandHandler<Command, CommandHandler>(this IChannelProvider channelProvider, ChannelIdentifier channelIdentifier, IContainer iocContainer)
             where CommandHandler : ICommandHandler<Command>
         {
             // Resolve the commmand handler once to verify that it is correctly registered in the iocContainer.
             // This is done to force the method to fail early (when making the registration) instead of late (when receiving a message of the given command type).
             iocContainer.Resolve<CommandHandler>();
-            return messageSource.GetChannel<Command>(channelIdentifier).Subscribe(command => iocContainer.Resolve<CommandHandler>().Handle(command));
+            return channelProvider.GetMessageSource<Command>(channelIdentifier).GetChannel().Subscribe(command => iocContainer.Resolve<CommandHandler>().Handle(command));
         }
     }
 }

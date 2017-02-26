@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using ComponentRunnerHelpers;
 using Microsoft.AspNet.SignalR;
 using Microsoft.WindowsAzure.Storage;
 using Newtonsoft.Json;
@@ -12,6 +13,7 @@ using PoF.Components.RandomError;
 using PoF.FakeImplementations;
 using PoF.Messaging;
 using PoF.Messaging.InMemory;
+using PoF.Messaging.ServiceBus;
 using PoF.StagingStore;
 using PoF.StagingStore.Azure;
 using PoF.StagingStore.InMemory;
@@ -49,52 +51,28 @@ namespace WebRunner
 
         private static IContainer BootstrapIoCContainer()
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            IContainer container = null;
-
-            builder.RegisterModule<CaPMAutofacModule>();
-            builder.RegisterModule<CollectorAutofacModule>();
-            builder.RegisterModule<ArchiverAutofacModule>();
-            builder.RegisterModule<RandomErrorAutofacModule>();
-
-            builder.RegisterType<FakeComponentChannelIdentifierRepository>().As<IComponentChannelIdentifierRepository>().SingleInstance();
-            builder.Register(context => CreateSubmissionAgreementStore()).As<ISubmissionAgreementStore>().SingleInstance();
-            builder.RegisterType<CaPMSystem>().SingleInstance();
-            builder.RegisterType<CaPMEventStore>().As<ICaPMEventStore>().SingleInstance();
-            builder.RegisterType<CollectorComponent>().SingleInstance();
-            builder.RegisterType<ArchiverComponent>().SingleInstance();
-            builder.RegisterType<RandomErrorComponent>().SingleInstance();
-            builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
-            builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
-            builder.RegisterType<InMemoryMessageSource>().As<IMessageSource>().SingleInstance();
-            ConfigureStagingStore(builder);
-            builder.Register(context => container).As<IContainer>().SingleInstance();
-
-            ConfigureAipStore(builder);
-
-            builder.RegisterType<IngestEventsHub>().InstancePerDependency();
-            builder.RegisterType<PreservationSystemHub>().InstancePerDependency();
-
-            container = builder.Build();
-            return container;
+            return ComponentRunnerHelper.BootstrapIoCContainer(builder =>
+            {
+                builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+                builder.Register(context => CreateSubmissionAgreementStore()).As<ISubmissionAgreementStore>().SingleInstance();
+                ComponentRunnerHelper.AddComponentModule<CaPMAutofacModule>(builder);
+                ComponentRunnerHelper.AddComponentModule<CollectorAutofacModule>(builder);
+                ComponentRunnerHelper.AddComponentModule<RandomErrorAutofacModule>(builder);
+                ComponentRunnerHelper.AddComponentModule<ArchiverAutofacModule>(builder);
+                builder.RegisterType<CaPMSystem>().SingleInstance();
+                builder.RegisterType<CaPMEventStore>().As<ICaPMEventStore>().SingleInstance();
+                ConfigureAipStore(builder);
+                builder.RegisterType<IngestEventsHub>().InstancePerDependency();
+                builder.RegisterType<PreservationSystemHub>().InstancePerDependency();
+            });
         }
 
-        private static void ConfigureStagingStore(ContainerBuilder builder)
-        {
-            if (string.IsNullOrWhiteSpace(AzureStorageConnectionString))
-            {
-                ConfigureInMemoryStagingStore(builder);
-            }
-            else
-            {
-                ConfigureAzureBlobStorageStagingStore(builder);
-            }
-        }
+        private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
 
         private static void ConfigureAipStore(ContainerBuilder builder)
         {
             IAipStore store;
+            //TODO: Should use its own storage connection string instead of using the Staging Store connection string
             var connectionString = AzureStorageConnectionString;
             if (string.IsNullOrWhiteSpace(connectionString))
             {
@@ -107,27 +85,6 @@ namespace WebRunner
                 blobAipStore.Initialize().Wait();
             }
             builder.Register(context => store).As<IAipStore>().SingleInstance();
-        }
-
-        private static void ConfigureInMemoryStagingStore(ContainerBuilder builder)
-        {
-            builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
-        }
-
-        private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
-
-        private static void ConfigureAzureBlobStorageStagingStore(ContainerBuilder builder)
-        {
-            var connectionString = AzureStorageConnectionString;
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                throw new Exception("Invalid configuration. Missing connection string with name 'AzureBlobStorageStagingStoreConnectionString'.");
-            }
-            var storageAccount = CloudStorageAccount.Parse(connectionString);
-            var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-            var stagingStoreContainer = new CachingStagingStoreContainerDecorator(new AzureBlobStorageStagingStoreContainer(cloudBlobClient));
-            stagingStoreContainer.PopulateCache().Wait();
-            builder.Register(context => stagingStoreContainer).As<IStagingStoreContainer>().SingleInstance();
         }
 
         private static ISubmissionAgreementStore CreateSubmissionAgreementStore()
