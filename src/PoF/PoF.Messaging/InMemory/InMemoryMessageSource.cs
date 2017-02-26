@@ -7,13 +7,19 @@ using System.Reactive.Linq;
 
 namespace PoF.Messaging.InMemory
 {
-    public class InMemoryMessageSource : IMessageSource
+    internal class InMemoryMessageSource<T> : IMessageSource<T>
     {
-        public IObservable<T> GetChannel<T>(ChannelIdentifier identifier)
+        private InMemoryMessageChannel _channel;
+
+        public InMemoryMessageSource(InMemoryMessageChannel channel)
+        {
+            _channel = channel;
+        }
+
+        public IObservable<T> GetChannel()
         {
             var type = typeof(T);
-            var channel = InMemoryMessageChannelProvider.Instance.GetChannel(identifier);
-            return channel.GetChannelObservable()
+            return _channel.GetChannelObservable()
                 .Where(t => t.Contains(type.Name))
                 .Select(s =>
                 {

@@ -13,6 +13,7 @@ namespace PoF.Components.Archiver
         {
             builder.RegisterType<StartArchiverComponentWorkCommandHandler>().InstancePerDependency();
             builder.RegisterType<StartArchiverComponentCompensationCommandHandler>().InstancePerDependency();
+            builder.RegisterType<ArchiverComponent>().SingleInstance();
         }
     }
 }

@@ -17,10 +17,10 @@ namespace WebRunner.Controllers
     {
         static IngestEventsHub()
         {
-            var messageSource = (IMessageSource)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IMessageSource));
+            var channelProvider = (IChannelProvider)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IChannelProvider));
             var componentChannelIdentifierRepository = (IComponentChannelIdentifierRepository)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IComponentChannelIdentifierRepository));
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<IngestEventsHub>();
-            messageSource.GetChannel<SerializedEvent>(componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)).Subscribe(evt =>
+            channelProvider.GetMessageSource<SerializedEvent>(componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)).GetChannel().Subscribe(evt =>
             {
                 hubContext.Clients.All.onNewEvent(evt.GetEventObject());
             });

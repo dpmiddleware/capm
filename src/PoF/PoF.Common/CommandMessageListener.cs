@@ -10,13 +10,13 @@ namespace PoF.Common
 {
     public class CommandMessageListener : ICommandMessageListener
     {
-        private IMessageSource _messageSource;
+        private IChannelProvider _channelProvider;
         private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
         private IContainer _iocContainer;
 
-        public CommandMessageListener(IMessageSource messageSource, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, IContainer iocContainer)
+        public CommandMessageListener(IChannelProvider channelProvider, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, IContainer iocContainer)
         {
-            this._messageSource = messageSource;
+            this._channelProvider = channelProvider;
             this._componentChannelIdentifierRepository = componentChannelIdentifierRepository;
             this._iocContainer = iocContainer;
         }
@@ -25,7 +25,7 @@ namespace PoF.Common
             where CommandHandler : ICommandHandler<Command>
         {
             ChannelIdentifier messageChannelIdentifier = _componentChannelIdentifierRepository.GetChannelIdentifierFor(messageChannelIdentifierCode);
-            return _messageSource.RegisterCommandHandler<Command, CommandHandler>(messageChannelIdentifier, _iocContainer);
+            return _channelProvider.RegisterCommandHandler<Command, CommandHandler>(messageChannelIdentifier, _iocContainer);
         }
     }
 }

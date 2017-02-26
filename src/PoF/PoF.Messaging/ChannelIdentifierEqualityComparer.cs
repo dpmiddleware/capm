@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PoF.Messaging
 {
-    internal class ChannelIdentifierEqualityComparer : IEqualityComparer<ChannelIdentifier>
+    public class ChannelIdentifierEqualityComparer : IEqualityComparer<ChannelIdentifier>
     {
         public bool Equals(ChannelIdentifier x, ChannelIdentifier y)
         {

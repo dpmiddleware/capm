@@ -13,6 +13,7 @@ namespace PoF.Components.Collector
         {
             builder.RegisterType<StartCollectorComponentWorkCommandHandler>().InstancePerDependency();
             builder.RegisterType<StartCollectorComponentCompensationCommandHandler>().InstancePerDependency();
+            builder.RegisterType<CollectorComponent>().SingleInstance();
         }
     }
 }

@@ -68,8 +68,8 @@ namespace ConsoleRunner
             builder.RegisterType<CollectorComponent>().SingleInstance();
             builder.RegisterType<ArchiverComponent>().SingleInstance();
             builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
+            builder.Register(_ => InMemoryMessageChannelProvider.Instance).As<IChannelProvider>().SingleInstance();
             builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
-            builder.RegisterType<InMemoryMessageSource>().As<IMessageSource>().SingleInstance();
             builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
             builder.Register(context => container).As<IContainer>().SingleInstance();
 
