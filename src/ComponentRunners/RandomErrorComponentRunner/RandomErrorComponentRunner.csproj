@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,8 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PoF\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj">
+      <Project>{433ea217-173e-4ed1-a8ae-e2d9ebf12602}</Project>
+      <Name>PoF.Components.RandomError</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ComponentRunnerHelpers\ComponentRunnerHelpers.csproj">
       <Project>{d05ec7df-401f-4a05-ab41-8f2571a2fa24}</Project>
       <Name>ComponentRunnerHelpers</Name>

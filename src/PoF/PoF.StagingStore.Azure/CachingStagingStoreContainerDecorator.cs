@@ -53,16 +53,25 @@ namespace PoF.StagingStore.Azure
             return Task.FromResult(_cachedStores.Keys.ToArray());
         }
 
-        public Task<IStagingStore> GetStoreForContextIdAsync(Guid contextId)
+        public async Task<IStagingStore> GetStoreForContextIdAsync(Guid contextId)
         {
             EnsureCacheIsPopulated();
             if (_cachedStores.ContainsKey(contextId))
             {
-                return Task.FromResult(_cachedStores[contextId]);
+                return _cachedStores[contextId];
             }
             else
             {
-                throw new Exception($"For some reason the cache has not been populated with any staging store for the id '{contextId}'. This is an error condition, meaning the cache is improperly written or the request for this store is erraneous.");
+                var contextIdsStored = await _stagingStoreContainer.GetStoredContextIds().ConfigureAwait(false);
+                if (contextIdsStored.Contains(contextId))
+                {
+                    _cachedStores.Add(contextId, new CachingStagingStore(await _stagingStoreContainer.GetStoreForContextIdAsync(contextId).ConfigureAwait(false)));
+                    return _cachedStores[contextId];
+                }
+                else
+                {
+                    throw new Exception($"For some reason the cache has not been populated with any staging store for the id '{contextId}'. This is an error condition, meaning the cache is improperly written or the request for this store is erraneous.");
+                }
             }
         }
 

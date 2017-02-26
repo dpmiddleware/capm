@@ -18,11 +18,13 @@ using PoF.StagingStore;
 using PoF.StagingStore.Azure;
 using PoF.StagingStore.InMemory;
 using System;
+using System.Linq;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
 using WebRunner.Controllers;
 using WebRunner.Services;
+using System.Collections.Generic;
 
 namespace WebRunner
 {
@@ -30,11 +32,13 @@ namespace WebRunner
     {
         public static void Configure()
         {
+            ValidateComponentsToRunConfiguration();
             IContainer container = BootstrapIoCContainer();
-            StartComponent<CollectorComponent>(container);
-            StartComponent<RandomErrorComponent>(container);
-            StartComponent<ArchiverComponent>(container);
-            StartComponent<CaPMSystem>(container);
+            foreach(var componentName in ComponentsToRun)
+            {
+                StartComponent(container, _moduleTypeDictionary[componentName]);
+            }
+            container.Resolve<CaPMSystem>().Start();
 
             var webApiResolver = new AutofacWebApiDependencyResolver(container);
             System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver = webApiResolver;
@@ -42,10 +46,9 @@ namespace WebRunner
             GlobalHost.DependencyResolver.Register(typeof(PreservationSystemHub), () => container.Resolve<PreservationSystemHub>());
         }
 
-        private static void StartComponent<T>(IContainer container)
-            where T : IComponent
+        private static void StartComponent(IContainer container, Type componentType)
         {
-            IComponent component = container.Resolve<T>();
+            var component = (IComponent)container.Resolve(componentType);
             component.Start();
         }
 
@@ -56,15 +59,48 @@ namespace WebRunner
                 builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
                 builder.Register(context => CreateSubmissionAgreementStore()).As<ISubmissionAgreementStore>().SingleInstance();
                 ComponentRunnerHelper.AddComponentModule<CaPMAutofacModule>(builder);
-                ComponentRunnerHelper.AddComponentModule<CollectorAutofacModule>(builder);
-                ComponentRunnerHelper.AddComponentModule<RandomErrorAutofacModule>(builder);
-                ComponentRunnerHelper.AddComponentModule<ArchiverAutofacModule>(builder);
+                LoadComponents(builder);
                 builder.RegisterType<CaPMSystem>().SingleInstance();
                 builder.RegisterType<CaPMEventStore>().As<ICaPMEventStore>().SingleInstance();
                 ConfigureAipStore(builder);
                 builder.RegisterType<IngestEventsHub>().InstancePerDependency();
                 builder.RegisterType<PreservationSystemHub>().InstancePerDependency();
             });
+        }
+
+        private static void LoadComponents(ContainerBuilder builder)
+        {
+            foreach (var componentName in ComponentsToRun)
+            {
+                var componentModule = (Autofac.Core.IModule)Activator.CreateInstance(_moduleTypeDictionary[componentName].Assembly.GetType($"PoF.Components.{componentName}.{componentName}AutofacModule"));
+                builder.RegisterModule(componentModule);
+            }
+        }
+
+        private static Dictionary<string, Type> _moduleTypeDictionary = new Dictionary<string, Type>()
+        {
+            ["Archiver"] = typeof(ArchiverComponent),
+            ["Collector"] = typeof(CollectorComponent),
+            ["RandomError"] = typeof(RandomErrorComponent)
+        };
+
+        private static void ValidateComponentsToRunConfiguration()
+        {
+            foreach (var componentName in ComponentsToRun)
+            {
+                if (!_moduleTypeDictionary.ContainsKey(componentName))
+                {
+                    throw new NotSupportedException($"Application configuration invalid. Component name '{componentName}' is not a supported component. Valid component names are: {string.Join(", ", _moduleTypeDictionary.Keys)}");
+                }
+            }
+        }
+
+        private static string[] ComponentsToRun
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ComponentsToRun"]?.Split(',', ';').Select(c => c.Trim()).ToArray() ?? new string[0];
+            }
         }
 
         private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
@@ -92,7 +128,7 @@ namespace WebRunner
             var store = new InMemorySubmissionAgreementStore();
             var agreementsString = File.ReadAllText(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "SubmissionAgreements.json"));
             var agreements = JsonConvert.DeserializeObject<SubmissionAgreement[]>(agreementsString);
-            foreach(var agreement in agreements)
+            foreach (var agreement in agreements)
             {
                 store.Add(agreement);
             }
