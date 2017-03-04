@@ -4,12 +4,14 @@
     "ProcessComponents": [
       {
         "ComponentCode": "Component.Collector",
-        "Order": 1
+        "Order": 1,
+        "ExecutionTimeoutInSeconds":  300
       },
       {
         "ComponentCode": "Component.Archiver",
         "Order": 2,
-        "ComponentSettings": "http://localhost:59669/api/aips"
+        "ExecutionTimeoutInSeconds": 300,
+        "ComponentSettings": "https://capm.azurewebsites.net/api/aips"
       }
     ]
   },
@@ -18,16 +20,19 @@
     "ProcessComponents": [
       {
         "ComponentCode": "Component.Collector",
-        "Order": 1
+        "Order": 1,
+        "ExecutionTimeoutInSeconds": 300
       },
       {
         "ComponentCode": "Component.RandomError",
-        "Order": 2
+        "Order": 2,
+        "ExecutionTimeoutInSeconds": 300
       },
       {
         "ComponentCode": "Component.Archiver",
         "Order": 3,
-        "ComponentSettings": "http://localhost:59669/api/aips"
+        "ExecutionTimeoutInSeconds": 300,
+        "ComponentSettings": "https://capm.azurewebsites.net/api/aips"
       }
     ]
   }

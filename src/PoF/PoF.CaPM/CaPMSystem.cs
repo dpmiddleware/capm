@@ -35,6 +35,7 @@ namespace PoF.CaPM
             _commandMessageListener.RegisterCommandHandler<StartIngestCommand, StartIngestCommandHandler>(CaPMComponentIdentifier);
             _commandMessageListener.RegisterCommandHandler<FailComponentWorkCommand, FailComponentWorkCommandHandler>(CaPMComponentIdentifier);
             _commandMessageListener.RegisterCommandHandler<CompleteComponentWorkCommand, CompleteComponentWorkCommandHandler>(CaPMComponentIdentifier);
+            _commandMessageListener.RegisterCommandHandler<TimeoutComponentWorkCommand, TimeoutComponentWorkCommandHandler>(CaPMComponentIdentifier);
         }
     }
 }
