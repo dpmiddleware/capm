@@ -11,7 +11,7 @@
         var events = [];
         function gatherEvents(gatherFunc, eventType, componentExecutionIdOrPredicate){
             if (!componentExecutionIdOrPredicate){componentExecutionIdOrPredicate = () => true;}
-            var predicate = typeof (componentExecutionIdOrPredicate) === 'string' ? e => e.componentExecutionId === componentExecutionIdOrPredicate : componentExecutionIdOrPredicate;
+            var predicate = typeof componentExecutionIdOrPredicate === 'string' ? e => e.componentExecutionId === componentExecutionIdOrPredicate : componentExecutionIdOrPredicate;
             var regexp = new RegExp(eventType, 'i');
             return gatherFunc.call(events, e => regexp.test(e.$type) && predicate(e));
         }
@@ -23,6 +23,10 @@
         }
         self.hasFailed = function () {
             return Boolean(getEvent('IngestComponentWorkFailed'));
+        };
+        self.getNumberOfSuccessfulComponents = function () {
+            console.log('Successful components: ' + self.ingestPlan.steps.filter(function (step) { return step.wasSuccessful; }).reduce(function (previousValue) { return previousValue + 1; }, 0));
+            return self.ingestPlan.steps.filter(function (step) { return step.wasSuccessful; }).reduce(function(previousValue){ return previousValue + 1; }, 0);
         };
         function readPlans() {
             var plans = getEvents('IngestPlanSet');
@@ -90,13 +94,13 @@
                 readPlans();
             }
             return self.ingestPlan;
-        }
+        };
 
         self.getCompensationPlan = function () {
             if (hasEventsChangedSinceLastPlanRead) {
                 readPlans();
             }
             return self.compensationPlan;
-        }
+        };
     }
 });

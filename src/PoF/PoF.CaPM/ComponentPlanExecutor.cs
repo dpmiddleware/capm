@@ -68,7 +68,10 @@ namespace PoF.CaPM
             {
                 CommandSent = command
             }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
-            await messageChannel.Send(command);
+            await messageChannel.Send(command, new MessageSendOptions()
+            {
+                MessageTimeToLiveInSeconds = planEntry.ExecutionTimeoutInSeconds
+            });
             if (planEntry.ExecutionTimeoutInSeconds.HasValue)
             {
                 var timeoutMessageChannel = _messageSenderFactory.GetChannel<TimeoutComponentWorkCommand>(capmChannelIdentifier);

@@ -73,27 +73,24 @@ namespace PoF.Messaging.ServiceBus
 
         public IObservable<string> GetChannelObservable()
         {
-            EnsureIsListening();
-            return _subject;
+            return Observable.Create<string>(observer =>
+            {
+                var subscription = _subject.Subscribe(observer);
+                EnsureIsListening();
+                return subscription;
+            });
         }
 
         public async Task Send<T>(T message, MessageSendOptions options)
         {
             var serializedMessage = ServiceBusMessageXmlSerializer.Instance.Serialize(message);
             var queueMessage = new CloudQueueMessage(serializedMessage);
-            if (options.MessageSendDelayInSeconds.HasValue)
-            {
-                await _queue.AddMessageAsync(queueMessage,
-                    timeToLive: null,
-                    initialVisibilityDelay: TimeSpan.FromSeconds(options.MessageSendDelayInSeconds.Value),
-                    options: new QueueRequestOptions(),
-                    operationContext: new OperationContext()
-                );
-            }
-            else
-            {
-                await _queue.AddMessageAsync(queueMessage);
-            }
+            await _queue.AddMessageAsync(queueMessage,
+                timeToLive: options.MessageTimeToLiveInSeconds.HasValue ? (TimeSpan?)TimeSpan.FromSeconds(options.MessageTimeToLiveInSeconds.Value) : null,
+                initialVisibilityDelay: options.MessageSendDelayInSeconds.HasValue ? (TimeSpan?)TimeSpan.FromSeconds(options.MessageSendDelayInSeconds.Value) : null,
+                options: new QueueRequestOptions(),
+                operationContext: new OperationContext()
+            );
         }
     }
 }

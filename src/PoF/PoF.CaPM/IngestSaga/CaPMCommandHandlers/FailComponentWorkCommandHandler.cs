@@ -46,7 +46,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
                     IngestPlan = previousPlan.IngestPlan
                         .Reverse()
                         //Only compensate actions which have finished successfully
-                        .Where(p => allPreviousEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Contains(p.ComponentExecutionId))
+                        .Where(p => p.ComponentExecutionId == command.ComponentExecutionId || allPreviousEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Contains(p.ComponentExecutionId))
                         .Select((eventToCompensate, index) => new IngestPlanSet.IngestPlanEntry()
                         {
                             ComponentCode = eventToCompensate.ComponentCode,
