@@ -84,6 +84,15 @@ preservation-system {
         flex: 1 0 auto;
     }   
 
+.ingest-details-table {
+    text-align:center;
+}
+
+.ingest-details-table .inactive-path {
+    border-color: gray;
+    opacity:0.5;
+}
+
 ol {
     list-style-type: none;
 }

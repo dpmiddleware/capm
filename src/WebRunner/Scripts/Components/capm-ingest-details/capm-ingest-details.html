@@ -1,5 +1,5 @@
 ﻿<div>
-    <table>
+    <table class="ingest-details-table">
         <tr>
             <td ng-repeat-start="step in $ctrl.getIngestPlan().steps">
                 <ingest-step step="step"></ingest-step>
@@ -9,15 +9,19 @@
             </td>
         </tr>
         <tr ng-if="$ctrl.hasFailed()">
+            <td colspan="{{($ctrl.getNumberOfSuccessfulComponents() * 2 )}}">
+                &nbsp;
+            </td>
+            <td>
+                <i class="fa fa-arrow-right fa-rotate-90"></i>
+            </td>
+        </tr>
+        <tr ng-if="$ctrl.hasFailed()">
             <td ng-repeat-start="step in $ctrl.getCompensationPlan().steps">
                 <ingest-step step="step"></ingest-step>
             </td>
             <td ng-repeat-end="">
                 <i class="fa fa-arrow-left" ng-class="{'inactive-path': !step.wasSuccessful}" ng-if="!$last"></i>
-                <span ng-if="$last">&nbsp</span>
-            </td>
-            <td style="text-align:center">
-                <i class="fa fa-level-down fa-2x fa-rotate-90"></i>
             </td>
         </tr>
     </table>

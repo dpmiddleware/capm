@@ -24,6 +24,10 @@
         self.hasFailed = function () {
             return Boolean(getEvent('IngestComponentWorkFailed'));
         };
+        self.getNumberOfSuccessfulComponents = function () {
+            console.log('Successful components: ' + self.ingestPlan.steps.filter(function (step) { return step.wasSuccessful }).reduce(function (previousValue) { return previousValue + 1; }, 0));
+            return self.ingestPlan.steps.filter(function(step){ return step.wasSuccessful }).reduce(function(previousValue){ return previousValue + 1; }, 0);
+        };
         function readPlans() {
             var plans = getEvents('IngestPlanSet');
             //The first plan (given that the order is correct, which we should be able to assume) should be the ingest plan
