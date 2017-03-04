@@ -8,7 +8,8 @@ namespace PoF.Messaging.ServiceBus
         private ServiceBusMessageChannel _channel;
         private static readonly MessageSendOptions _defaultMessageSendOptions = new MessageSendOptions()
         {
-            MessageSendDelayInSeconds = null
+            MessageSendDelayInSeconds = null,
+            MessageTimeToLiveInSeconds = null
         };
 
         public ServiceBusMessageSender(ServiceBusMessageChannel channel)

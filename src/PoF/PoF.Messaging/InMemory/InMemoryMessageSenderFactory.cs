@@ -20,7 +20,8 @@ namespace PoF.Messaging.InMemory
             private bool _isDisposed = false;
             private static readonly MessageSendOptions _defaultMessageSendOptions = new MessageSendOptions()
             {
-                MessageSendDelayInSeconds = null
+                MessageSendDelayInSeconds = null,
+                MessageTimeToLiveInSeconds = null
             };
 
             public InMemoryMessageSender(InMemoryMessageChannel channel)
