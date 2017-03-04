@@ -18,6 +18,7 @@ namespace PoF.CaPM.IngestSaga.Events
         {
             public Guid ComponentExecutionId { get; set; }
             public string ComponentCode { get; set; }
+            public int? ExecutionTimeoutInSeconds { get; set; }
             public string ComponentSettings { get; set; }
             public uint Order { get; set; }
             public bool IsCompensatingComponent { get; set; }

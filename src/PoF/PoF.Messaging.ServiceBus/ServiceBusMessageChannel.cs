@@ -77,11 +77,23 @@ namespace PoF.Messaging.ServiceBus
             return _subject;
         }
 
-        public async Task Send<T>(T message)
+        public async Task Send<T>(T message, MessageSendOptions options)
         {
             var serializedMessage = ServiceBusMessageXmlSerializer.Instance.Serialize(message);
             var queueMessage = new CloudQueueMessage(serializedMessage);
-            await _queue.AddMessageAsync(queueMessage);
+            if (options.MessageSendDelayInSeconds.HasValue)
+            {
+                await _queue.AddMessageAsync(queueMessage,
+                    timeToLive: null,
+                    initialVisibilityDelay: TimeSpan.FromSeconds(options.MessageSendDelayInSeconds.Value),
+                    options: new QueueRequestOptions(),
+                    operationContext: new OperationContext()
+                );
+            }
+            else
+            {
+                await _queue.AddMessageAsync(queueMessage);
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ namespace PoF.FakeImplementations
                     new SubmissionAgreement.ComponentExecutionPlan()
                     {
                         ComponentCode = PoF.Components.Archiver.ArchiverComponent.ArchiverComponentIdentifier,
-                        ExecutionTimeoutInSeconds = 180,
+                        ExecutionTimeoutInSeconds = 10,
                         Order = 3,
                         ComponentSettings = "http://localhost:59669/api/aips"
                     }

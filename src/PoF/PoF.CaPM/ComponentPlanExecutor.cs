@@ -53,13 +53,14 @@ namespace PoF.CaPM
             var ingestStartedEvent = (await eventStore.GetStoredEvents()).OfType<IngestStarted>().Single();
             var plannedComponentChannelIdentifier = _componentChannelIdentifierRepository.GetChannelIdentifierFor(planEntry.ComponentCode);
             var messageChannel = _messageSenderFactory.GetChannel<StartComponentWorkCommand>(plannedComponentChannelIdentifier);
+            var capmChannelIdentifier = GetCaPMMessageChannelIdentifier();
             var command = new StartComponentWorkCommand()
             {
                 IngestId = ingestId,
                 ComponentCode = planEntry.ComponentCode,
                 ComponentExecutionId = planEntry.ComponentExecutionId,
                 ComponentSettings = planEntry.ComponentSettings,
-                ComponentResultCallbackChannel = GetCaPMMessageChannelIdentifier(),
+                ComponentResultCallbackChannel = capmChannelIdentifier,
                 IngestParameters = ingestStartedEvent.IngestParameters
             };
             //We would need to do the following two as part of a transaction, if we want to make any guarantees
@@ -68,6 +69,20 @@ namespace PoF.CaPM
                 CommandSent = command
             }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             await messageChannel.Send(command);
+            if (planEntry.ExecutionTimeoutInSeconds.HasValue)
+            {
+                var timeoutMessageChannel = _messageSenderFactory.GetChannel<TimeoutComponentWorkCommand>(capmChannelIdentifier);
+                var timeoutMessage = new TimeoutComponentWorkCommand()
+                {
+                    ComponentExecutionId = planEntry.ComponentExecutionId,
+                    ComponentTimeoutMessageChannel = capmChannelIdentifier,
+                    IngestId = ingestId
+                };
+                await timeoutMessageChannel.Send(timeoutMessage, new MessageSendOptions()
+                {
+                    MessageSendDelayInSeconds = planEntry.ExecutionTimeoutInSeconds.Value
+                });
+            }
         }
 
         private async Task ExecuteComponentCompensation(Guid ingestId, IngestPlanSet.IngestPlanEntry planEntry)

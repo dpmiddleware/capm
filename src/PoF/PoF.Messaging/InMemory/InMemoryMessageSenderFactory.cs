@@ -18,6 +18,10 @@ namespace PoF.Messaging.InMemory
         {
             private InMemoryMessageChannel _channel;
             private bool _isDisposed = false;
+            private static readonly MessageSendOptions _defaultMessageSendOptions = new MessageSendOptions()
+            {
+                MessageSendDelayInSeconds = null
+            };
 
             public InMemoryMessageSender(InMemoryMessageChannel channel)
             {
@@ -26,18 +30,34 @@ namespace PoF.Messaging.InMemory
 
             public Task Send(T message)
             {
-                if (_isDisposed)
-                {
-                    throw new ObjectDisposedException("InMemoryMessageSender");
-                }
-                _channel.Send(message);
-                return Task.CompletedTask;
+                return Send(message, _defaultMessageSendOptions);
             }
 
             public void Dispose()
             {
                 _channel = null;
                 _isDisposed = true;
+            }
+
+            public Task Send(T message, MessageSendOptions options)
+            {
+                if (_isDisposed)
+                {
+                    throw new ObjectDisposedException("InMemoryMessageSender");
+                }
+                if (options.MessageSendDelayInSeconds.HasValue)
+                {
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(options.MessageSendDelayInSeconds.Value));
+                        _channel.Send(message);
+                    });
+                }
+                else
+                {
+                    _channel.Send(message);
+                }
+                return Task.CompletedTask;
             }
         }
     }
