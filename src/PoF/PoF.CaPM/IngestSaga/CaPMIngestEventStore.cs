@@ -59,7 +59,7 @@ namespace PoF.CaPM.IngestSaga
                 var item = await _componentStagingStore.GetItemAsync(id).ConfigureAwait(false);
                 return item.ReadSerializedEvent();
             })).ConfigureAwait(false);
-            return events.OrderBy(e => e.Timestamp).ToArray();
+            return events.OrderBy(e => e.Order).ToArray();
         }
 
         public async Task<uint> GetNumberOfStoredEvents()

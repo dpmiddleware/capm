@@ -31,29 +31,34 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
         {
             var eventStore = await CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, command.IngestId);
             var allPreviousEvents = await eventStore.GetStoredEvents();
-            var previousPlan = allPreviousEvents.OfType<IngestPlanSet>().Last();
-            await eventStore.StoreEvent(new IngestComponentWorkFailed()
+            //In case the component has already been considered timeout out (or, for some erraneous reason
+            //has already reported that it has errored or completed) we want to ignore this message.
+            if (command.ComponentExecutionId.MatchesCurrentlyExecutingComponentExecutionId(allPreviousEvents))
             {
-                ComponentExecutionId = command.ComponentExecutionId,
-                Reason = command.Reason
-            }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
-            var ingestPlan = new IngestPlanSet()
-            {
-                IngestPlan = previousPlan.IngestPlan
-                    .Reverse()
-                    //Only compensate actions which have finished successfully
-                    .Where(p => allPreviousEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Contains(p.ComponentExecutionId))
-                    .Select((eventToCompensate, index) => new IngestPlanSet.IngestPlanEntry()
+                var previousPlan = allPreviousEvents.OfType<IngestPlanSet>().Last();
+                await eventStore.StoreEvent(new IngestComponentWorkFailed()
                 {
-                    ComponentCode = eventToCompensate.ComponentCode,
-                    ComponentSettings = eventToCompensate.ComponentSettings,
-                    ComponentExecutionId = Guid.NewGuid(),
-                    IsCompensatingComponent = true,
-                    Order = (uint)index
-                }).ToArray()
-            };
-            await eventStore.StoreEvent(ingestPlan, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
-            await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
+                    ComponentExecutionId = command.ComponentExecutionId,
+                    Reason = command.Reason
+                }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
+                var ingestPlan = new IngestPlanSet()
+                {
+                    IngestPlan = previousPlan.IngestPlan
+                        .Reverse()
+                        //Only compensate actions which have finished successfully
+                        .Where(p => allPreviousEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Contains(p.ComponentExecutionId))
+                        .Select((eventToCompensate, index) => new IngestPlanSet.IngestPlanEntry()
+                        {
+                            ComponentCode = eventToCompensate.ComponentCode,
+                            ComponentSettings = eventToCompensate.ComponentSettings,
+                            ComponentExecutionId = Guid.NewGuid(),
+                            IsCompensatingComponent = true,
+                            Order = (uint)index
+                        }).ToArray()
+                };
+                await eventStore.StoreEvent(ingestPlan, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
+                await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
+            }
         }
     }
 }

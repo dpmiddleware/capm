@@ -29,8 +29,7 @@ namespace PoF.CaPM
         {
             var eventStore = await GetCaPMEventStore(ingestId);
             var storedEvents = await eventStore.GetStoredEvents();
-            var lastExecutionPlan = storedEvents.OfType<IngestPlanSet>().Last();
-            var firstNonCompletedComponentInPlan = GetFirstNonCompletedComponentInPlan(lastExecutionPlan, storedEvents);
+            var firstNonCompletedComponentInPlan = storedEvents.GetFirstNonCompletedComponentInCurrentPlan();
             if (firstNonCompletedComponentInPlan.HasValue)
             {
                 if (firstNonCompletedComponentInPlan.Value.IsCompensatingComponent)
@@ -93,25 +92,7 @@ namespace PoF.CaPM
             }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
             await messageChannel.Send(command);
         }
-
-        private IngestPlanSet.IngestPlanEntry? GetFirstNonCompletedComponentInPlan(IngestPlanSet lastExecutionPlan, IIngestEvent[] storedEvents)
-        {
-            var completedComponentExecutionIds =
-                storedEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Concat(
-                    storedEvents.OfType<IngestComponentCompensationCompleted>().Select(e => e.ComponentExecutionId)
-                ).ToArray();
-            var orderedPlanEntries = lastExecutionPlan.IngestPlan.OrderBy(p => p.Order);
-            foreach (var planEntry in orderedPlanEntries)
-            {
-                if (!completedComponentExecutionIds.Contains(planEntry.ComponentExecutionId))
-                {
-                    return planEntry;
-                }
-            }
-            //If all the entries in the plan has already been completed, we return a nulled nullable to indicate that no more entries are in the plan
-            return null;
-        }
-
+        
         private Task<CaPMIngestEventStore> GetCaPMEventStore(Guid ingestId)
         {
             return CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, ingestId);
