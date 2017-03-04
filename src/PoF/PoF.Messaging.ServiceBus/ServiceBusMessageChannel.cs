@@ -52,6 +52,10 @@ namespace PoF.Messaging.ServiceBus
                     if (!_isListening)
                     {
                         _isListening = true;
+                        const int HighestPollingInterval = 1000;
+                        const int LowestPollingInterval = 200;
+                        const int PollingIntervalIncrement = 200;
+                        var pollingInterval = LowestPollingInterval;
                         _listeningTask = Task.Run(async () =>
                         {
                             while (true)
@@ -59,11 +63,16 @@ namespace PoF.Messaging.ServiceBus
                                 var message = await _queue.GetMessageAsync(visibilityTimeout: TimeSpan.FromMinutes(5), options: null, operationContext: null);
                                 if (message != null)
                                 {
+                                    pollingInterval = LowestPollingInterval;
                                     var messageContent = message.AsString;
                                     _subject.OnNext(messageContent);
                                     await _queue.DeleteMessageAsync(message);
                                 }
-                                await Task.Delay(500);
+                                else
+                                {
+                                    pollingInterval = Math.Min(pollingInterval + PollingIntervalIncrement, HighestPollingInterval);
+                                }
+                                await Task.Delay(pollingInterval);
                             }
                         });
                     }
