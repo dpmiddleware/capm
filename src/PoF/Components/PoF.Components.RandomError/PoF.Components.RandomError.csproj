@@ -34,6 +34,9 @@
       <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomErrorAutofacModule.cs" />
     <Compile Include="RandomErrorComponent.cs" />
+    <Compile Include="RandomErrorComponentSettings.cs" />
     <Compile Include="StartRandomErrorComponentCompensationCommandHandler.cs" />
     <Compile Include="StartRandomErrorComponentWorkCommandHandler.cs" />
   </ItemGroup>

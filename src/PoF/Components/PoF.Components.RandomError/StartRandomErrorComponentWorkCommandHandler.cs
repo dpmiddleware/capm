@@ -1,4 +1,5 @@
-﻿using PoF.Common;
+﻿using Newtonsoft.Json;
+using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
 using PoF.Messaging;
 using System;
@@ -22,8 +23,9 @@ namespace PoF.Components.RandomError
 
         public async Task Handle(StartComponentWorkCommand command)
         {
+            var settings = GetSettings(command);
             await Task.Delay((int)(_randomizer.NextDouble() * 2 * 1000));
-            if (_randomizer.NextDouble() > 0.5)
+            if (_randomizer.NextDouble() > settings.FailureRisk)
             { 
                 await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
                 {
@@ -39,6 +41,18 @@ namespace PoF.Components.RandomError
                     IngestId = command.IngestId,
                     Reason = "The randomizer has chosen to give this execution an error"
                 });
+            }
+        }
+
+        private RandomErrorComponentSettings GetSettings(StartComponentWorkCommand command)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<RandomErrorComponentSettings>(command.ComponentSettings);
+            }
+            catch
+            {
+                return new RandomErrorComponentSettings();
             }
         }
     }
