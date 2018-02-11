@@ -103,6 +103,10 @@
       <Project>{86e888ec-cb69-49f6-a8ab-a28b171ee2af}</Project>
       <Name>PoF.StagingStore.Azure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\PoF\PoF.StagingStore.Filesystem\PoF.StagingStore.Filesystem.csproj">
+      <Project>{CA9E8DB8-B466-4F80-B9D0-399C13CC5DF9}</Project>
+      <Name>PoF.StagingStore.Filesystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\PoF\PoF.StagingStore\PoF.StagingStore.csproj">
       <Project>{8f733dfa-c3fa-46e6-bff1-b80152a97f42}</Project>
       <Name>PoF.StagingStore</Name>

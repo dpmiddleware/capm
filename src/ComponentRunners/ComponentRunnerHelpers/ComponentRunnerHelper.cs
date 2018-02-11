@@ -8,6 +8,7 @@ using PoF.Messaging.InMemory;
 using PoF.Messaging.ServiceBus;
 using PoF.StagingStore;
 using PoF.StagingStore.Azure;
+using PoF.StagingStore.Filesystem;
 using PoF.StagingStore.InMemory;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,9 @@ namespace ComponentRunnerHelpers
 
         private static void ConfigureStagingStore(ContainerBuilder builder)
         {
+            builder.RegisterInstance(new FileSystemStagingStoreContainer(@"C:\temp\capmstagingstore")).As<IStagingStoreContainer>().SingleInstance();
+            return;
+#warning Remove configuration of file system staging store once we're done
             if (string.IsNullOrWhiteSpace(AzureStorageConnectionString))
             {
                 ConfigureInMemoryStagingStore(builder);
@@ -82,7 +86,7 @@ namespace ComponentRunnerHelpers
         }
 
         private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
-
+        
         private static void ConfigureAzureBlobStorageStagingStore(ContainerBuilder builder)
         {
             var connectionString = AzureStorageConnectionString;
