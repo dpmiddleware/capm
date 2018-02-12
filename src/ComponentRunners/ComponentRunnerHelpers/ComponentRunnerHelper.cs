@@ -67,9 +67,6 @@ namespace ComponentRunnerHelpers
 
         private static void ConfigureStagingStore(ContainerBuilder builder)
         {
-            builder.RegisterInstance(new FileSystemStagingStoreContainer(@"C:\temp\capmstagingstore")).As<IStagingStoreContainer>().SingleInstance();
-            return;
-#warning Remove configuration of file system staging store once we're done
             if (string.IsNullOrWhiteSpace(AzureStorageConnectionString))
             {
                 ConfigureInMemoryStagingStore(builder);
