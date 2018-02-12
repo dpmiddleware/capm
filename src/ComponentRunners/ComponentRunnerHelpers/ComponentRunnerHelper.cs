@@ -8,6 +8,7 @@ using PoF.Messaging.InMemory;
 using PoF.Messaging.ServiceBus;
 using PoF.StagingStore;
 using PoF.StagingStore.Azure;
+using PoF.StagingStore.Filesystem;
 using PoF.StagingStore.InMemory;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,7 @@ namespace ComponentRunnerHelpers
         }
 
         private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
-
+        
         private static void ConfigureAzureBlobStorageStagingStore(ContainerBuilder builder)
         {
             var connectionString = AzureStorageConnectionString;

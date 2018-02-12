@@ -1,4 +1,5 @@
-﻿using PoF.Common;
+﻿using Newtonsoft.Json;
+using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
 using PoF.Messaging;
 using PoF.StagingStore;
@@ -15,6 +16,7 @@ namespace PoF.Components.Collector
     {
         private IStagingStoreContainer _stagingStoreContainer;
         private IMessageSenderFactory _messageSenderFactory;
+        private static readonly Random _randomizer = new Random();
 
         public StartCollectorComponentCompensationCommandHandler(IStagingStoreContainer stagingStoreContainer, IMessageSenderFactory messageSenderFactory)
         {
@@ -25,19 +27,46 @@ namespace PoF.Components.Collector
         public async Task Handle(StartComponentCompensationCommand command)
         {
             var store = await _stagingStoreContainer.GetSharedStore(command.IngestId);
-            if (await store.HasItemAsync("downloadedfile-bytes"))
+            var settings = GetSettings(command);
+            if (settings.CompensationFailureRisk.HasValue && _randomizer.NextDouble() < settings.CompensationFailureRisk.Value)
             {
+                await _messageSenderFactory.GetChannel<FailComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new FailComponentWorkCommand()
+                {
+                    ComponentExecutionId = command.ComponentExecutionId,
+                    IngestId = command.IngestId,
+                    Reason = "Randomized compensation failure occured"
+                });
+            }
+            else
+            {
+                if (await store.HasItemAsync("downloadedfile-bytes"))
+                {
+                    await store.RemoveItemAsync("downloadedfile-bytes");
+                }
+                if (await store.HasItemAsync("downloadedfile-contenttype"))
+                {
+                    await store.RemoveItemAsync("downloadedfile-contenttype");
+                }
                 await store.RemoveItemAsync("downloadedfile-bytes");
-            }
-            if (await store.HasItemAsync("downloadedfile-contenttype"))
-            {
                 await store.RemoveItemAsync("downloadedfile-contenttype");
+                await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
+                {
+                    ComponentExecutionId = command.ComponentExecutionId,
+                    IngestId = command.IngestId
+                });
             }
-            await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
+        }
+
+        private CollectorComponentSettings GetSettings(StartComponentCompensationCommand command)
+        {
+            try
             {
-                ComponentExecutionId = command.ComponentExecutionId,
-                IngestId = command.IngestId
-            });
+                return JsonConvert.DeserializeObject<CollectorComponentSettings>(command.ComponentSettings);
+            }
+            catch
+            {
+                return new CollectorComponentSettings();
+            }
         }
     }
 }

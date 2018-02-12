@@ -53,7 +53,7 @@ namespace PoF.Messaging.ServiceBus
                     {
                         _isListening = true;
                         const int HighestPollingInterval = 1000;
-                        const int LowestPollingInterval = 200;
+                        const int LowestPollingInterval = 0;
                         const int PollingIntervalIncrement = 200;
                         var pollingInterval = LowestPollingInterval;
                         _listeningTask = Task.Run(async () =>
@@ -64,15 +64,23 @@ namespace PoF.Messaging.ServiceBus
                                 if (message != null)
                                 {
                                     pollingInterval = LowestPollingInterval;
-                                    var messageContent = message.AsString;
-                                    _subject.OnNext(messageContent);
-                                    await _queue.DeleteMessageAsync(message);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                    Task.Factory.StartNew(async () =>
+                                    {
+                                        var messageContent = message.AsString;
+                                        _subject.OnNext(messageContent);
+                                        await _queue.DeleteMessageAsync(message);
+                                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                                 }
                                 else
                                 {
                                     pollingInterval = Math.Min(pollingInterval + PollingIntervalIncrement, HighestPollingInterval);
                                 }
-                                await Task.Delay(pollingInterval);
+                                if (pollingInterval > 0)
+                                {
+                                    await Task.Delay(pollingInterval);
+                                }
                             }
                         });
                     }

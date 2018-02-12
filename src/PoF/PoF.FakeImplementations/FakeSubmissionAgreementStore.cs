@@ -59,6 +59,25 @@ namespace PoF.FakeImplementations
                         ComponentSettings = "http://localhost:59669/api/aips"
                     }
                 }
+            },
+            ["1% Failing and 1% Failing on Compensation"] = new SubmissionAgreement()
+            {
+                SubmissionAgreementId = "1% Failing and 1% Failing on Compensation",
+                ProcessComponents = new[]
+                {
+                    new SubmissionAgreement.ComponentExecutionPlan
+                    {
+                        ComponentCode = "Component.Collector",
+                        ComponentSettings = "{\"CompensationFailureRisk\": 0.01}",
+                        Order = 1
+                    },
+                    new SubmissionAgreement.ComponentExecutionPlan
+                    {
+                        ComponentCode= "Component.RandomError",
+                        ComponentSettings= "{\"FailureRisk\": 0.01}",
+                        Order= 2
+                    }
+                }
             }
         };
 
