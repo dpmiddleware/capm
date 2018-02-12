@@ -79,9 +79,10 @@
     <Compile Include="ICaPMEventStore.cs" />
     <Compile Include="IComponentPlanExecutor.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\CommandHandlerAutofacModule.cs" />
-    <Compile Include="IngestSaga\CaPMCommandHandlers\CompleteComponentWorkCommand.cs" />
+    <Compile Include="IngestSaga\CaPMCommandHandlers\CompleteComponentWorkCommandHandler.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\FailComponentWorkCommandHandler.cs" />
     <Compile Include="IngestSaga\CaPMCommandHandlers\StartIngestCommandHandler.cs" />
+    <Compile Include="IngestSaga\CaPMCommandHandlers\TimeoutComponentWorkCommandHandler.cs" />
     <Compile Include="IngestSaga\CaPMIngestEventStore.cs" />
     <Compile Include="IngestSaga\Events\IngestCompleted.cs" />
     <Compile Include="IngestSaga\Events\IngestComponentWorkFailed.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="IngestSaga\Events\IngestPlanSet.cs" />
     <Compile Include="IngestSaga\Events\IngestStarted.cs" />
     <Compile Include="CaPMSystem.cs" />
+    <Compile Include="IngestSaga\IngestPlanHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\SerializedEvent.cs" />
     <Compile Include="Serialization\SerializedEventHelpers.cs" />

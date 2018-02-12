@@ -30,11 +30,17 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
         public async Task Handle(CompleteComponentWorkCommand command)
         {
             var eventStore = await CaPMIngestEventStore.GetCaPMEventStore(_stagingStoreContainer, command.IngestId);
-            await eventStore.StoreEvent(new IngestComponentWorkCompleted()
+            var allPreviousEvents = await eventStore.GetStoredEvents();
+            //In case the component has already been considered timeout out (or, for some erraneous reason
+            //has already reported that it has errored or completed) we want to ignore this message.
+            if (command.ComponentExecutionId.MatchesCurrentlyExecutingComponentExecutionId(allPreviousEvents))
             {
-                ComponentExecutionId = command.ComponentExecutionId
-            }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
-            await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
+                await eventStore.StoreEvent(new IngestComponentWorkCompleted()
+                {
+                    ComponentExecutionId = command.ComponentExecutionId
+                }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
+                await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
+            }
         }
     }
 }

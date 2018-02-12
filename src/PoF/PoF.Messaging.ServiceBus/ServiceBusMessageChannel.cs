@@ -52,6 +52,10 @@ namespace PoF.Messaging.ServiceBus
                     if (!_isListening)
                     {
                         _isListening = true;
+                        const int HighestPollingInterval = 1000;
+                        const int LowestPollingInterval = 0;
+                        const int PollingIntervalIncrement = 200;
+                        var pollingInterval = LowestPollingInterval;
                         _listeningTask = Task.Run(async () =>
                         {
                             while (true)
@@ -59,6 +63,7 @@ namespace PoF.Messaging.ServiceBus
                                 var message = await _queue.GetMessageAsync(visibilityTimeout: TimeSpan.FromMinutes(5), options: null, operationContext: null);
                                 if (message != null)
                                 {
+                                    pollingInterval = LowestPollingInterval;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                                     Task.Factory.StartNew(async () =>
                                     {
@@ -67,6 +72,14 @@ namespace PoF.Messaging.ServiceBus
                                         await _queue.DeleteMessageAsync(message);
                                     });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                }
+                                else
+                                {
+                                    pollingInterval = Math.Min(pollingInterval + PollingIntervalIncrement, HighestPollingInterval);
+                                }
+                                if (pollingInterval > 0)
+                                {
+                                    await Task.Delay(pollingInterval);
                                 }
                             }
                         });
@@ -77,15 +90,24 @@ namespace PoF.Messaging.ServiceBus
 
         public IObservable<string> GetChannelObservable()
         {
-            EnsureIsListening();
-            return _subject;
+            return Observable.Create<string>(observer =>
+            {
+                var subscription = _subject.Subscribe(observer);
+                EnsureIsListening();
+                return subscription;
+            });
         }
 
-        public async Task Send<T>(T message)
+        public async Task Send<T>(T message, MessageSendOptions options)
         {
             var serializedMessage = ServiceBusMessageXmlSerializer.Instance.Serialize(message);
             var queueMessage = new CloudQueueMessage(serializedMessage);
-            await _queue.AddMessageAsync(queueMessage);
+            await _queue.AddMessageAsync(queueMessage,
+                timeToLive: options.MessageTimeToLiveInSeconds.HasValue ? (TimeSpan?)TimeSpan.FromSeconds(options.MessageTimeToLiveInSeconds.Value) : null,
+                initialVisibilityDelay: options.MessageSendDelayInSeconds.HasValue ? (TimeSpan?)TimeSpan.FromSeconds(options.MessageSendDelayInSeconds.Value) : null,
+                options: new QueueRequestOptions(),
+                operationContext: new OperationContext()
+            );
         }
     }
 }

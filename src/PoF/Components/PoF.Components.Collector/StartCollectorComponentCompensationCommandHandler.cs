@@ -39,6 +39,14 @@ namespace PoF.Components.Collector
             }
             else
             {
+                if (await store.HasItemAsync("downloadedfile-bytes"))
+                {
+                    await store.RemoveItemAsync("downloadedfile-bytes");
+                }
+                if (await store.HasItemAsync("downloadedfile-contenttype"))
+                {
+                    await store.RemoveItemAsync("downloadedfile-contenttype");
+                }
                 await store.RemoveItemAsync("downloadedfile-bytes");
                 await store.RemoveItemAsync("downloadedfile-contenttype");
                 await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()

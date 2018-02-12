@@ -15,6 +15,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
             builder.RegisterType<StartIngestCommandHandler>().InstancePerDependency();
             builder.RegisterType<CompleteComponentWorkCommandHandler>().InstancePerDependency();
             builder.RegisterType<FailComponentWorkCommandHandler>().InstancePerDependency();
+            builder.RegisterType<TimeoutComponentWorkCommandHandler>().InstancePerDependency();
         }
     }
 }

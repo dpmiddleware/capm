@@ -70,6 +70,7 @@
     <Compile Include="Commands\IngestCommands\StartComponentCompensationCommand.cs" />
     <Compile Include="Commands\IngestCommands\StartComponentWorkCommand.cs" />
     <Compile Include="Commands\IngestCommands\StartIngestCommand.cs" />
+    <Compile Include="Commands\IngestCommands\TimeoutComponentWorkCommand.cs" />
     <Compile Include="ComponentContext.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="ICommandMessageListener.cs" />

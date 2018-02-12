@@ -67,6 +67,7 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
                 {
                     ComponentCode = processComponent.ComponentCode,
                     ComponentExecutionId = Guid.NewGuid(),
+                    ExecutionTimeoutInSeconds = processComponent.ExecutionTimeoutInSeconds,
                     ComponentSettings = processComponent.ComponentSettings,
                     IsCompensatingComponent = false,
                     Order = (uint)index

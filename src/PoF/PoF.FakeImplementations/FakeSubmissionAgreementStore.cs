@@ -22,12 +22,15 @@ namespace PoF.FakeImplementations
                     new SubmissionAgreement.ComponentExecutionPlan()
                     {
                         ComponentCode = PoF.Components.Collector.CollectorComponent.CollectorComponentIdentifier,
+                        ExecutionTimeoutInSeconds = 180,
                         Order = 1
                     },
                     new SubmissionAgreement.ComponentExecutionPlan()
                     {
                         ComponentCode = PoF.Components.Archiver.ArchiverComponent.ArchiverComponentIdentifier,
-                        Order = 2
+                        ExecutionTimeoutInSeconds = 180,
+                        Order = 2,
+                        ComponentSettings = "http://localhost:59669/api/aips"
                     }
                 }
             },
@@ -39,16 +42,19 @@ namespace PoF.FakeImplementations
                     new SubmissionAgreement.ComponentExecutionPlan()
                     {
                         ComponentCode = PoF.Components.Collector.CollectorComponent.CollectorComponentIdentifier,
+                        ExecutionTimeoutInSeconds = 180,
                         Order = 1
                     },
                     new SubmissionAgreement.ComponentExecutionPlan()
                     {
                         ComponentCode = PoF.Components.RandomError.RandomErrorComponent.RandomErrorComponentIdentifier,
+                        ExecutionTimeoutInSeconds = 180,
                         Order = 2
                     },
                     new SubmissionAgreement.ComponentExecutionPlan()
                     {
                         ComponentCode = PoF.Components.Archiver.ArchiverComponent.ArchiverComponentIdentifier,
+                        ExecutionTimeoutInSeconds = 10,
                         Order = 3,
                         ComponentSettings = "http://localhost:59669/api/aips"
                     }

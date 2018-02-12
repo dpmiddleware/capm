@@ -68,6 +68,7 @@
     <Compile Include="InMemory\InMemoryMessageSenderFactory.cs" />
     <Compile Include="InMemory\InMemoryMessageSource.cs" />
     <Compile Include="InMemory\InMemoryMessageXmlSerializer.cs" />
+    <Compile Include="MessageSendOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

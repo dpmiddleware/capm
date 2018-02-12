@@ -15,6 +15,7 @@ namespace PoF.CaPM.SubmissionAgreements
         public struct ComponentExecutionPlan
         {
             public string ComponentCode { get; set; }
+            public int? ExecutionTimeoutInSeconds { get; set; }
             public string ComponentSettings { get; set; }
             public uint Order { get; set; }
         }

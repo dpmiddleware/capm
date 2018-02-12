@@ -125,14 +125,21 @@ namespace WebRunner
 
         private static ISubmissionAgreementStore CreateSubmissionAgreementStore()
         {
-            var store = new InMemorySubmissionAgreementStore();
-            var agreementsString = File.ReadAllText(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "SubmissionAgreements.json"));
-            var agreements = JsonConvert.DeserializeObject<SubmissionAgreement[]>(agreementsString);
-            foreach (var agreement in agreements)
+            if ("DEV".Equals(Environment.GetEnvironmentVariable("ENVIRONMENT"), StringComparison.CurrentCultureIgnoreCase))
             {
-                store.Add(agreement);
+                return new FakeSubmissionAgreementStore();
             }
-            return store;
+            else
+            {
+                var store = new InMemorySubmissionAgreementStore();
+                var agreementsString = File.ReadAllText(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "SubmissionAgreements.json"));
+                var agreements = JsonConvert.DeserializeObject<SubmissionAgreement[]>(agreementsString);
+                foreach (var agreement in agreements)
+                {
+                    store.Add(agreement);
+                }
+                return store;
+            }
         }
     }
 }
