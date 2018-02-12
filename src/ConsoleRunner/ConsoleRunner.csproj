@@ -56,6 +56,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ComponentRunners\ComponentRunnerHelpers\ComponentRunnerHelpers.csproj">
+      <Project>{D05EC7DF-401F-4A05-AB41-8F2571A2FA24}</Project>
+      <Name>ComponentRunnerHelpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PoF\Components\PoF.Components.Archiver\PoF.Components.Archiver.csproj">
       <Project>{998c09e3-057a-4fd3-97bf-8417bfc90f9f}</Project>
       <Name>PoF.Components.Archiver</Name>

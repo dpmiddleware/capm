@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ComponentRunnerHelpers;
 using PoF.CaPM;
 using PoF.CaPM.SubmissionAgreements;
 using PoF.Common;
@@ -21,38 +22,88 @@ namespace ConsoleRunner
     {
         static void Main(string[] args)
         {
-            IContainer container = BootstrapIoCContainer();
-            StartComponent<CollectorComponent>(container);
-            StartComponent<RandomErrorComponent>(container);
-            StartComponent<ArchiverComponent>(container);
-            StartComponent<CaPMSystem>(container);
-            Task.Factory.StartNew(() =>
-            {
-                Thread.Sleep(1000);
-                var messageSenderFactory = container.Resolve<IMessageSenderFactory>();
-                var channelIdentifierRepository = container.Resolve<IComponentChannelIdentifierRepository>();
-                var capmMessageChannelIdentifier = channelIdentifierRepository.GetChannelIdentifierFor(CaPMSystem.CaPMComponentIdentifier);
-                var capmMessageChannel = messageSenderFactory.GetChannel<StartIngestCommand>(capmMessageChannelIdentifier);
-                capmMessageChannel.Send(new StartIngestCommand()
-                {
-                    SubmissionAgreementId = "SubmissionAgreement1",
-                    IngestParameters = "http://images4.fanpop.com/image/photos/16000000/Cute-Kitten-Wallpaper-kittens-16094684-1280-800.jpg"
-                });
-            });
+            Start(StartMode.CapmOnly);
 
             Console.WriteLine("System running, press [ENTER] to quit.");
             Console.ReadLine();
             Console.WriteLine("System shut down.");
         }
 
+        private enum StartMode
+        {
+            CapmOnly,
+            InMemoryWithAllComponents,
+            OnlySendLotsOfMessages
+        }
+
+        private static void Start(StartMode mode)
+        {
+            IContainer container;
+            switch (mode)
+            {
+                case StartMode.CapmOnly:
+                    container = BootstrapIoCContainer();
+                    StartComponent<CaPMSystem>(container);
+                    break;
+                case StartMode.InMemoryWithAllComponents:
+                    container = BoostrapIoCContainerForInMemoryExecution();
+                    StartComponent<CollectorComponent>(container);
+                    StartComponent<RandomErrorComponent>(container);
+                    StartComponent<ArchiverComponent>(container);
+                    StartComponent<CaPMSystem>(container);
+                    break;
+                case StartMode.OnlySendLotsOfMessages:
+                    container = BootstrapIoCContainer();
+                    SendStartIngestCommands(container);
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        private static void SendStartIngestCommands(IContainer container)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var messageSenderFactory = container.Resolve<IMessageSenderFactory>();
+                var channelIdentifierRepository = container.Resolve<IComponentChannelIdentifierRepository>();
+                var capmMessageChannelIdentifier = channelIdentifierRepository.GetChannelIdentifierFor(CaPMSystem.CaPMComponentIdentifier);
+                var capmMessageChannel = messageSenderFactory.GetChannel<StartIngestCommand>(capmMessageChannelIdentifier);
+
+                var command = new StartIngestCommand()
+                {
+                    SubmissionAgreementId = "1% Failing and 1% Failing on Compensation",
+                    IngestParameters = "http://localhost:17729/images/unnamed.png"
+                };
+                for (var i = 0; i < 1302; i++)
+                {
+                    if (i % 100 == 0)
+                    {
+                        Console.WriteLine("Sending new message, " + i);
+                    }
+                    capmMessageChannel.Send(command);
+                }
+            });
+        }
+
         private static void StartComponent<T>(IContainer container)
-            where T: IComponent
+            where T : IComponent
         {
             IComponent component = container.Resolve<T>();
             component.Start();
         }
 
         private static IContainer BootstrapIoCContainer()
+        {
+            return ComponentRunnerHelper.BootstrapIoCContainer(builder =>
+            {
+                builder.RegisterType<FakeSubmissionAgreementStore>().As<ISubmissionAgreementStore>().SingleInstance();
+                builder.RegisterType<CaPMSystem>();
+                builder.RegisterModule<CaPMAutofacModule>();
+            });
+        }
+
+        private static IContainer BoostrapIoCContainerForInMemoryExecution()
         {
             var builder = new ContainerBuilder();
             IContainer container = null;
