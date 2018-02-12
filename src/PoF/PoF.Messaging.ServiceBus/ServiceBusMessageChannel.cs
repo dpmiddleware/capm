@@ -59,11 +59,15 @@ namespace PoF.Messaging.ServiceBus
                                 var message = await _queue.GetMessageAsync(visibilityTimeout: TimeSpan.FromMinutes(5), options: null, operationContext: null);
                                 if (message != null)
                                 {
-                                    var messageContent = message.AsString;
-                                    _subject.OnNext(messageContent);
-                                    await _queue.DeleteMessageAsync(message);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                    Task.Factory.StartNew(async () =>
+                                    {
+                                        var messageContent = message.AsString;
+                                        _subject.OnNext(messageContent);
+                                        await _queue.DeleteMessageAsync(message);
+                                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                                 }
-                                await Task.Delay(500);
                             }
                         });
                     }
