@@ -12,10 +12,13 @@ namespace RandomErrorComponentRunner
     {
         static void Main(string[] args)
         {
-            var container = ComponentRunnerHelpers.ComponentRunnerHelper.BootstrapIoCContainer(builder =>
-            {
-                builder.RegisterModule<RandomErrorAutofacModule>();
-            });
+            var configuration = ComponentRunnerHelpers.ComponentRunnerHelper.GetConfiguration(args);
+            var container = ComponentRunnerHelpers.ComponentRunnerHelper.BootstrapIoCContainer(configuration,
+                builder =>
+                {
+                    builder.RegisterModule<RandomErrorAutofacModule>();
+                }
+            );
             container.Resolve<RandomErrorComponent>().Start();
             Console.WriteLine("RandomError component started. Press [ENTER] to quit.");
             Console.ReadLine();

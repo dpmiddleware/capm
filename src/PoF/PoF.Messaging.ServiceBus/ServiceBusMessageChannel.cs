@@ -40,7 +40,7 @@ namespace PoF.Messaging.ServiceBus
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_storageAccountConnectionstring);
             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
             _queue = queueClient.GetQueueReference(_channelIdentifier.Name.ToLower().Replace('.', '-'));
-            _queue.CreateIfNotExists();
+            _queue.CreateIfNotExistsAsync().Wait();
         }
 
         private void EnsureIsListening()

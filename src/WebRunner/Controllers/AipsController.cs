@@ -4,32 +4,35 @@ using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
 using WebRunner.Services;
 using WebRunner.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace WebRunner.Controllers
 {
-    public class AipsController : ApiController
+    [Route("api/aips")]
+    public class AipsController : ControllerBase
     {
         private IAipStore _store;
 
         public AipsController(IAipStore store)
         {
-            _store = store;            
+            _store = store;
         }
 
         [HttpPost]
         public async Task Post()
         {
+            using var memoryStream = new MemoryStream();
+            await Request.Body.CopyToAsync(memoryStream).ConfigureAwait(false);
             var newId = await _store.Store(new Aip()
             {
-                ContentType = Request.Content.Headers.ContentType.ToString(),
-                Bytes = await Request.Content.ReadAsByteArrayAsync(),
+                ContentType = Request.ContentType.ToString(),
+                Bytes = memoryStream.ToArray(),
                 Timestamp = DateTimeOffset.UtcNow
             });
-            PreservationSystemHub.OnNewAip(newId);
+            await PreservationSystemHub.OnNewAip(newId).ConfigureAwait(false);
         }
 
         [HttpGet]
@@ -38,19 +41,15 @@ namespace WebRunner.Controllers
             return _store.GetAllStoredIds();
         }
 
-        [HttpGet]
-        public async Task<HttpResponseMessage> Get(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
         {
             if (!await _store.Exists(id))
             {
-                return new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
+                return NotFound();
             }
             var aip = await _store.Get(id);
-            var content = new ByteArrayContent(aip.Bytes);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(aip.ContentType);
-            var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);
-            response.Content = content;
-            return response;
+            return File(aip.Bytes, aip.ContentType);
         }
     }
 }

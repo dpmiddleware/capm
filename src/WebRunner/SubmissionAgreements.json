@@ -5,13 +5,13 @@
       {
         "ComponentCode": "Component.Collector",
         "Order": 1,
-        "ExecutionTimeoutInSeconds":  300
+        "ExecutionTimeoutInSeconds": 300
       },
       {
         "ComponentCode": "Component.Archiver",
         "Order": 2,
         "ExecutionTimeoutInSeconds": 300,
-        "ComponentSettings": "https://capm.azurewebsites.net/api/aips"
+        "ComponentSettings": "https://localhost:5001/api/aips"
       }
     ]
   },
@@ -32,7 +32,7 @@
         "ComponentCode": "Component.Archiver",
         "Order": 3,
         "ExecutionTimeoutInSeconds": 300,
-        "ComponentSettings": "https://capm.azurewebsites.net/api/aips"
+        "ComponentSettings": "https://localhost:5001/api/aips"
       }
     ]
   },
@@ -72,7 +72,7 @@
       {
         "ComponentCode": "Component.Archiver",
         "Order": 3,
-        "ComponentSettings": "http://localhost:59669/api/aips"
+        "ComponentSettings": "https://localhost:5001/api/aips"
       }
     ]
   }

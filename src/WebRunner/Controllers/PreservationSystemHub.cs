@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNet.SignalR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using WebRunner.Services;
 using System.Threading.Tasks;
 using WebRunner.Models;
+using Microsoft.AspNetCore.SignalR;
 
 namespace WebRunner.Controllers
 {
     public class PreservationSystemHub : Hub
     {
+        private static IHubContext<PreservationSystemHub> _hubContext;
         private IAipStore _store;
 
         public PreservationSystemHub(IAipStore store)
@@ -18,19 +19,23 @@ namespace WebRunner.Controllers
             _store = store;
         }
 
-        public static void OnNewAip(string aipId)
+        internal static void Initialize(IHubContext<PreservationSystemHub> hubContext)
         {
-            var context = GlobalHost.ConnectionManager.GetHubContext<PreservationSystemHub>();
-            context.Clients.All.onNewAip(aipId);
+            _hubContext = hubContext;
         }
 
-        public override async Task OnConnected()
+        public static async Task OnNewAip(string aipId)
         {
-            foreach(var aipId in await _store.GetAllStoredIds())
+            await _hubContext.Clients.All.SendAsync("onNewAip", aipId).ConfigureAwait(false);
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            foreach (var aipId in await _store.GetAllStoredIds())
             {
-                Clients.Caller.onNewAip(aipId);
+                await Clients.Caller.SendAsync("onNewAip", aipId);
             }
-            await base.OnConnected();
+            await base.OnConnectedAsync();
         }
     }
 }

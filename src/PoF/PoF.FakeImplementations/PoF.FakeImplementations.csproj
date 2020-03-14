@@ -1,80 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6EFEB351-7A71-43BA-A329-752E16B06634}</ProjectGuid>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PoF.FakeImplementations</RootNamespace>
-    <AssemblyName>PoF.FakeImplementations</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Components\PoF.Components.Archiver\PoF.Components.Archiver.csproj" />
+    <ProjectReference Include="..\Components\PoF.Components.Collector\PoF.Components.Collector.csproj" />
+    <ProjectReference Include="..\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj" />
+    <ProjectReference Include="..\PoF.CaPM\PoF.CaPM.csproj" />
+    <ProjectReference Include="..\PoF.Messaging\PoF.Messaging.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FakeComponentChannelIdentifierRepository.cs" />
-    <Compile Include="FakeSubmissionAgreementStore.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Components\PoF.Components.Archiver\PoF.Components.Archiver.csproj">
-      <Project>{998C09E3-057A-4FD3-97BF-8417BFC90F9F}</Project>
-      <Name>PoF.Components.Archiver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Components\PoF.Components.Collector\PoF.Components.Collector.csproj">
-      <Project>{ED3154E7-508C-4015-8E4E-155D167678B3}</Project>
-      <Name>PoF.Components.Collector</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Components\PoF.Components.RandomError\PoF.Components.RandomError.csproj">
-      <Project>{433ea217-173e-4ed1-a8ae-e2d9ebf12602}</Project>
-      <Name>PoF.Components.RandomError</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF.CaPM\PoF.CaPM.csproj">
-      <Project>{1FBDBB42-C22C-4182-AD7B-173B89BB2ACA}</Project>
-      <Name>PoF.CaPM</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF.Messaging\PoF.Messaging.csproj">
-      <Project>{ECE62D1E-9045-4FC0-93DE-3E3375053205}</Project>
-      <Name>PoF.Messaging</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

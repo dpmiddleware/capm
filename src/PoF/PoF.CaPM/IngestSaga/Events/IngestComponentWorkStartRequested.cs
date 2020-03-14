@@ -10,6 +10,7 @@ namespace PoF.CaPM.IngestSaga.Events
 {
     public struct IngestComponentWorkStartRequested : IIngestEvent
     {
+        public string EventType { get => nameof(IngestComponentWorkStartRequested); }
         public DateTimeOffset Timestamp { get; set; }
         public Guid IngestId { get; set; }
         public uint Order { get; set; }

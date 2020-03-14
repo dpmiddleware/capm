@@ -12,10 +12,13 @@ namespace ArchiverComponentRunner
     {
         static void Main(string[] args)
         {
-            var container = ComponentRunnerHelpers.ComponentRunnerHelper.BootstrapIoCContainer(builder =>
-            {
-                builder.RegisterModule<ArchiverAutofacModule>();
-            });
+            var configuration = ComponentRunnerHelpers.ComponentRunnerHelper.GetConfiguration(args);
+            var container = ComponentRunnerHelpers.ComponentRunnerHelper.BootstrapIoCContainer(configuration,
+                builder =>
+                {
+                    builder.RegisterModule<ArchiverAutofacModule>();
+                }
+            );
             container.Resolve<ArchiverComponent>().Start();
             Console.WriteLine("Archiver component started. Press [ENTER] to quit.");
             Console.ReadLine();

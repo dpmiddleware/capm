@@ -9,6 +9,7 @@ namespace PoF.CaPM.IngestSaga.Events
 {
     public struct IngestPlanSet : IIngestEvent
     {
+        public string EventType { get => nameof(IngestPlanSet); }
         public DateTimeOffset Timestamp { get; set; }
         public Guid IngestId { get; set; }
         public IngestPlanEntry[] IngestPlan { get; set; }
