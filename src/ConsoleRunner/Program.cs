@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using ComponentRunnerHelpers;
+using Microsoft.Extensions.Configuration;
 using PoF.CaPM;
 using PoF.CaPM.SubmissionAgreements;
 using PoF.Common;
@@ -22,7 +23,8 @@ namespace ConsoleRunner
     {
         static void Main(string[] args)
         {
-            Start(StartMode.CapmOnly);
+            var configuration = ComponentRunnerHelper.GetConfiguration(args);
+            Start(configuration);
 
             Console.WriteLine("System running, press [ENTER] to quit.");
             Console.ReadLine();
@@ -36,13 +38,15 @@ namespace ConsoleRunner
             OnlySendLotsOfMessages
         }
 
-        private static void Start(StartMode mode)
+        private static void Start(IConfiguration configuration)
         {
+            var mode = Enum.Parse(typeof(StartMode), configuration?["mode"] ?? "CapmOnly", ignoreCase: true);
+            Console.WriteLine("Starting console runner with mode: " + mode);
             IContainer container;
             switch (mode)
             {
                 case StartMode.CapmOnly:
-                    container = BootstrapIoCContainer();
+                    container = BootstrapIoCContainer(configuration);
                     StartComponent<CaPMSystem>(container);
                     break;
                 case StartMode.InMemoryWithAllComponents:
@@ -51,9 +55,14 @@ namespace ConsoleRunner
                     StartComponent<RandomErrorComponent>(container);
                     StartComponent<ArchiverComponent>(container);
                     StartComponent<CaPMSystem>(container);
+                    Task.Factory.StartNew(async () =>
+                    {
+                        await Task.Delay(2000);
+                        SendIngestCommand(container);
+                    });
                     break;
                 case StartMode.OnlySendLotsOfMessages:
-                    container = BootstrapIoCContainer();
+                    container = BootstrapIoCContainer(configuration);
                     SendStartIngestCommands(container);
                     break;
                 default:
@@ -86,6 +95,22 @@ namespace ConsoleRunner
             });
         }
 
+        private static void SendIngestCommand(IContainer container)
+        {
+            var messageSenderFactory = container.Resolve<IMessageSenderFactory>();
+            var channelIdentifierRepository = container.Resolve<IComponentChannelIdentifierRepository>();
+            var capmMessageChannelIdentifier = channelIdentifierRepository.GetChannelIdentifierFor(CaPMSystem.CaPMComponentIdentifier);
+            var capmMessageChannel = messageSenderFactory.GetChannel<StartIngestCommand>(capmMessageChannelIdentifier);
+
+            var command = new StartIngestCommand()
+            {
+                SubmissionAgreementId = "SubmissionAgreement1",
+                IngestParameters = "http://localhost:17729/images/unnamed.png"
+            };
+
+            capmMessageChannel.Send(command);
+        }
+
         private static void StartComponent<T>(IContainer container)
             where T : IComponent
         {
@@ -93,9 +118,9 @@ namespace ConsoleRunner
             component.Start();
         }
 
-        private static IContainer BootstrapIoCContainer()
+        private static IContainer BootstrapIoCContainer(IConfiguration configuration)
         {
-            return ComponentRunnerHelper.BootstrapIoCContainer(builder =>
+            return ComponentRunnerHelper.BootstrapIoCContainer(configuration, builder =>
             {
                 builder.RegisterType<FakeSubmissionAgreementStore>().As<ISubmissionAgreementStore>().SingleInstance();
                 builder.RegisterType<CaPMSystem>();
@@ -106,7 +131,6 @@ namespace ConsoleRunner
         private static IContainer BoostrapIoCContainerForInMemoryExecution()
         {
             var builder = new ContainerBuilder();
-            IContainer container = null;
 
             builder.RegisterModule<CaPMAutofacModule>();
             builder.RegisterModule<CollectorAutofacModule>();
@@ -122,9 +146,8 @@ namespace ConsoleRunner
             builder.Register(_ => InMemoryMessageChannelProvider.Instance).As<IChannelProvider>().SingleInstance();
             builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
             builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
-            builder.Register(context => container).As<IContainer>().SingleInstance();
 
-            container = builder.Build();
+            var container = builder.Build();
             return container;
         }
     }

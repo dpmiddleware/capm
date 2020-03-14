@@ -69,7 +69,22 @@ namespace WebRunner.Services
         public async Task<string[]> GetAllStoredIds()
         {
             await EnsureInitialized().ConfigureAwait(false);
-            return _container.ListBlobs(useFlatBlobListing: true).OfType<CloudBlockBlob>().Select(b => b.Name).ToArray();
+            var blobs = new List<IListBlobItem>();
+            BlobResultSegment results = null;
+            do
+            {
+                results = await _container.ListBlobsSegmentedAsync(
+                    prefix: null,
+                    useFlatBlobListing: true,
+                    blobListingDetails: BlobListingDetails.None,
+                    maxResults: 1000,
+                    currentToken: results?.ContinuationToken,
+                    options: null,
+                    operationContext: null
+                ).ConfigureAwait(false);
+                blobs.AddRange(results.Results);
+            } while (results != null && results.ContinuationToken != null);
+            return blobs.OfType<CloudBlockBlob>().Select(b => b.Name).ToArray();
         }
 
         public async Task<string> Store(Aip aip)

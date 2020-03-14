@@ -16,6 +16,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ComponentRunnerHelpers
 {
@@ -27,11 +28,28 @@ namespace ComponentRunnerHelpers
             builder.RegisterModule<ComponentAutofacModuleType>();
         }
 
-        public static IContainer BootstrapIoCContainer(params Action<ContainerBuilder>[] additionalBootstrappers)
+        public static IConfiguration GetConfiguration(string[] commandLineArgs)
+        {
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("config.json", optional: true)
+                .AddEnvironmentVariables()
+                .AddCommandLine(commandLineArgs ?? new string[0]);
+
+            IConfiguration configuration = builder.Build();
+            return configuration;
+        }
+
+        public static void BootstrapIoCContainer(ContainerBuilder builder, IConfiguration configuration)
+        {
+            builder.RegisterType<FakeComponentChannelIdentifierRepository>().As<IComponentChannelIdentifierRepository>().SingleInstance();
+            builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
+            ConfigureMessageSender(configuration, builder);
+            ConfigureStagingStore(configuration, builder);
+        }
+
+        public static IContainer BootstrapIoCContainer(IConfiguration configuration, params Action<ContainerBuilder>[] additionalBootstrappers)
         {
             var builder = new ContainerBuilder();
-            IContainer container = null;
-
             if (additionalBootstrappers != null)
             {
                 foreach (var bootstrappingAction in additionalBootstrappers)
@@ -39,41 +57,39 @@ namespace ComponentRunnerHelpers
                     bootstrappingAction(builder);
                 }
             }
-
-            builder.RegisterType<FakeComponentChannelIdentifierRepository>().As<IComponentChannelIdentifierRepository>().SingleInstance();
-            builder.RegisterType<CommandMessageListener>().As<ICommandMessageListener>().InstancePerDependency();
-            ConfigureMessageSender(builder);
-            ConfigureStagingStore(builder);
+            BootstrapIoCContainer(builder, configuration);
+            IContainer container = null;
             builder.Register(context => container).As<IContainer>().SingleInstance();
-
             container = builder.Build();
             return container;
         }
 
-        private static void ConfigureMessageSender(ContainerBuilder builder)
+        private static void ConfigureMessageSender(IConfiguration configuration, ContainerBuilder builder)
         {
             //TODO: Should use its own connection string instead of the staging store connection string
-            if (string.IsNullOrWhiteSpace(AzureStorageConnectionString))
+            var connectionString = configuration[AzureStorageConnectionString_ConfigurationKey];
+            if (string.IsNullOrWhiteSpace(connectionString))
             {
                 builder.Register(_ => InMemoryMessageChannelProvider.Instance).As<InMemoryMessageChannelProvider>().As<IChannelProvider>().SingleInstance();
                 builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
             }
             else
             {
-                builder.Register(_ => new ServiceBusMessageChannelProvider(AzureStorageConnectionString)).As<ServiceBusMessageChannelProvider>().As<IChannelProvider>().SingleInstance();
+                builder.Register(_ => new ServiceBusMessageChannelProvider(connectionString)).As<ServiceBusMessageChannelProvider>().As<IChannelProvider>().SingleInstance();
                 builder.RegisterType<ServiceBusMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
             }
         }
 
-        private static void ConfigureStagingStore(ContainerBuilder builder)
+        private static void ConfigureStagingStore(IConfiguration configuration, ContainerBuilder builder)
         {
-            if (string.IsNullOrWhiteSpace(AzureStorageConnectionString))
+            var connectionstring = configuration[AzureStorageConnectionString_ConfigurationKey];
+            if (string.IsNullOrWhiteSpace(connectionstring))
             {
                 ConfigureInMemoryStagingStore(builder);
             }
             else
             {
-                ConfigureAzureBlobStorageStagingStore(builder);
+                ConfigureAzureBlobStorageStagingStore(connectionstring, builder);
             }
         }
 
@@ -82,11 +98,10 @@ namespace ComponentRunnerHelpers
             builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
         }
 
-        private static string AzureStorageConnectionString => ConfigurationManager.ConnectionStrings["AzureBlobStorageStagingStoreConnectionString"]?.ConnectionString;
-        
-        private static void ConfigureAzureBlobStorageStagingStore(ContainerBuilder builder)
+        private const string AzureStorageConnectionString_ConfigurationKey = "AzureBlobStorageStagingStoreConnectionString";
+
+        private static void ConfigureAzureBlobStorageStagingStore(string connectionString, ContainerBuilder builder)
         {
-            var connectionString = AzureStorageConnectionString;
             if (string.IsNullOrWhiteSpace(connectionString))
             {
                 throw new Exception("Invalid configuration. Missing connection string with name 'AzureBlobStorageStagingStoreConnectionString'.");

@@ -1,0 +1,147 @@
+Properties that are defaulted by the SDK:
+- Configuration = Debug
+- Platform = AnyCPU
+- OutputType = Library
+- AppDesignerFolder = Properties
+- RootNamespace = PoF.Components.Archiver
+- AssemblyName = PoF.Components.Archiver
+- TargetFrameworkVersion = v4.6.1
+- FileAlignment = 512
+- DebugSymbols = true
+- Optimize = false
+- ErrorReport = prompt
+- WarningLevel = 4
+
+Properties that are not defaulted by the SDK:
++ ProjectGuid = {998C09E3-057A-4FD3-97BF-8417BFC90F9F}
++ TargetFrameworkProfile = 
+
+Properties whose value is different from the SDK's default:
+- DebugType = full
++ DebugType = portable
+- OutputPath = bin\Debug\
++ OutputPath = bin\Debug\net4.6.1\
+- DefineConstants = DEBUG;TRACE
++ DefineConstants = TRACE;DEBUG;NETFRAMEWORK;NET461
+
+Reference items:
+- System
+- System.Data
+- System.Xml
+- System.Core
+- System.Xml.Linq
+= Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL
+= System.Data.DataSetExtensions
+= Microsoft.CSharp
+= System.Net.Http
++ System.Drawing
++ System.Runtime.Serialization
++ System.Numerics
++ System.IO.Compression.FileSystem
+
+Compile items:
+- ArchiverAutofacModule.cs
+- ArchiverComponent.cs
+- Properties\AssemblyInfo.cs
+- StartArchiverComponentCompensationCommandHandler.cs
+- StartArchiverComponentWorkCommandHandler.cs
+
+None items:
+- app.config
+- packages.config
+
+ProjectReferenceTargets items:
+- Build
+- Build
+- Clean
+- Clean
+- Rebuild
+- Rebuild
+- Publish
+- GetCopyToPublishDirectoryItems
+
+PropertyPageSchema items:
+- C:\Program Files\dotnet\sdk\3.1.100\\CSharp.ProjectItemsSchema.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\CSharp.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\CSharp.BrowseObject.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\ProjectItemsSchema.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\General.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\Debugger_General.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\General.BrowseObject.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\General_File.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\SCC.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\Folder.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\None.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\Content.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\EmbeddedResource.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\SpecialFolder.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\assemblyreference.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\ResolvedAssemblyReference.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\COMReference.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\ResolvedCOMReference.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\ProjectReference.xaml
+- C:\Program Files\dotnet\sdk\3.1.100\\ResolvedProjectReference.xaml
+
+ProjectCapability items:
+- CSharp
+- Managed
+- ReferencesFolder
+- LanguageService
+- RelativePathDerivedDefaultNamespace
+- AssemblyReferences
+- COMReferences
+- ProjectReferences
+- SharedProjectReferences
+- OutputGroups
+- AllTargetOutputGroups
+- VisualStudioWellKnownOutputGroups
+- SingleFileGenerators
+- DeclaredSourceItems
+- UserSourceItems
+- BuildWindowsDesktopTarget
++ GenerateDocumentationFile
++ Pack
+
+PotentialEditorConfigFiles items:
+- C:\.editorconfig
+- C:\Users\.editorconfig
+- C:\Users\Robert\.editorconfig
+- C:\Users\Robert\git\.editorconfig
+- C:\Users\Robert\git\capm\.editorconfig
+- C:\Users\Robert\git\capm\src\.editorconfig
+- C:\Users\Robert\git\capm\src\PoF\.editorconfig
+- C:\Users\Robert\git\capm\src\PoF\Components\.editorconfig
+- C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\.editorconfig
+- C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\Properties\.editorconfig
+
+AppConfigFileDestination items:
+= bin\Debug\PoF.Components.Archiver.dll.config
++ bin\Debug\net4.6.1\PoF.Components.Archiver.dll.config
+
+IntermediateAssembly items:
+= obj\Debug\PoF.Components.Archiver.dll
++ obj\Debug\net4.6.1\PoF.Components.Archiver.dll
+
+CopyUpToDateMarker items:
+= C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\obj\Debug\PoF.Components.Archiver.csproj.CopyComplete
++ C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\obj\Debug\net4.6.1\PoF.Components.Archiver.csproj.CopyComplete
+
+ApplicationManifest items:
+= obj\Debug\Native.PoF.Components.Archiver.manifest
++ obj\Debug\net4.6.1\Native.PoF.Components.Archiver.manifest
+
+DeployManifest items:
+= obj\Debug\PoF.Components.Archiver.application
++ obj\Debug\net4.6.1\PoF.Components.Archiver.application
+
+BuiltProjectOutputGroupKeyOutput items:
+= C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\obj\Debug\PoF.Components.Archiver.dll
++ C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\obj\Debug\net4.6.1\PoF.Components.Archiver.dll
+
+DebugSymbolsProjectOutputGroupOutput items:
+= C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\obj\Debug\PoF.Components.Archiver.pdb
++ C:\Users\Robert\git\capm\src\PoF\Components\PoF.Components.Archiver\obj\Debug\net4.6.1\PoF.Components.Archiver.pdb
+
+PackageConflictOverrides items:
+- NETStandard.Library
+

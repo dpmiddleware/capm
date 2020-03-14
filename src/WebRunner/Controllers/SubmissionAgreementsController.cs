@@ -1,14 +1,15 @@
-﻿using PoF.CaPM.SubmissionAgreements;
+﻿using Microsoft.AspNetCore.Mvc;
+using PoF.CaPM.SubmissionAgreements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 
 namespace WebRunner.Controllers
 {
-    public class SubmissionAgreementsController : ApiController
+    [Route("api/submissionagreements")]
+    public class SubmissionAgreementsController : ControllerBase
     {
         private ISubmissionAgreementStore _submissionAgreementStore;
 

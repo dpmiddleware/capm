@@ -1,88 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ED3154E7-508C-4015-8E4E-155D167678B3}</ProjectGuid>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PoF.Components.Collector</RootNamespace>
-    <AssemblyName>PoF.Components.Collector</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\PoF.Common\PoF.Common.csproj" />
+    <ProjectReference Include="..\..\PoF.Messaging\PoF.Messaging.csproj" />
+    <ProjectReference Include="..\..\PoF.StagingStore\PoF.StagingStore.csproj" />
+    <ProjectReference Include="..\PoF.Components.Archiver\PoF.Components.Archiver.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CollectorAutofacModule.cs" />
-    <Compile Include="CollectorComponent.cs" />
-    <Compile Include="CollectorComponentSettings.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StartCollectorComponentCompensationCommandHandler.cs" />
-    <Compile Include="StartCollectorComponentWorkCommandHandler.cs" />
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\PoF.Common\PoF.Common.csproj">
-      <Project>{46804729-e238-4c18-8417-dd93306a8ec8}</Project>
-      <Name>PoF.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\PoF.Messaging\PoF.Messaging.csproj">
-      <Project>{ECE62D1E-9045-4FC0-93DE-3E3375053205}</Project>
-      <Name>PoF.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\PoF.StagingStore\PoF.StagingStore.csproj">
-      <Project>{8F733DFA-C3FA-46E6-BFF1-B80152A97F42}</Project>
-      <Name>PoF.StagingStore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PoF.Components.Archiver\PoF.Components.Archiver.csproj">
-      <Project>{998c09e3-057a-4fd3-97bf-8417bfc90f9f}</Project>
-      <Name>PoF.Components.Archiver</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

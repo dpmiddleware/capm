@@ -47,8 +47,6 @@ namespace PoF.Components.Collector
                 {
                     await store.RemoveItemAsync("downloadedfile-contenttype");
                 }
-                await store.RemoveItemAsync("downloadedfile-bytes");
-                await store.RemoveItemAsync("downloadedfile-contenttype");
                 await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
                 {
                     ComponentExecutionId = command.ComponentExecutionId,

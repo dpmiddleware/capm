@@ -12,20 +12,20 @@ namespace PoF.Common
     {
         private IChannelProvider _channelProvider;
         private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
-        private IContainer _iocContainer;
+        private ILifetimeScope _iocLifetimeScope;
 
-        public CommandMessageListener(IChannelProvider channelProvider, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, IContainer iocContainer)
+        public CommandMessageListener(IChannelProvider channelProvider, IComponentChannelIdentifierRepository componentChannelIdentifierRepository, ILifetimeScope iocLifetimeScope)
         {
             this._channelProvider = channelProvider;
             this._componentChannelIdentifierRepository = componentChannelIdentifierRepository;
-            this._iocContainer = iocContainer;
+            this._iocLifetimeScope = iocLifetimeScope;
         }
 
         public IDisposable RegisterCommandHandler<Command, CommandHandler>(string messageChannelIdentifierCode)
             where CommandHandler : ICommandHandler<Command>
         {
             ChannelIdentifier messageChannelIdentifier = _componentChannelIdentifierRepository.GetChannelIdentifierFor(messageChannelIdentifierCode);
-            return _channelProvider.RegisterCommandHandler<Command, CommandHandler>(messageChannelIdentifier, _iocContainer);
+            return _channelProvider.RegisterCommandHandler<Command, CommandHandler>(messageChannelIdentifier, _iocLifetimeScope);
         }
     }
 }

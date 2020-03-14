@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "@microsoft/signalr@latest",
+      "destination": "public/deps/signalr",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
+      ]
+    },
+    {
+      "library": "es-module-shims@latest",
+      "destination": "public/deps/es-module-shims",
+      "files": [
+        "dist/es-module-shims.js"
+      ]
+    },
+    {
+      "library": "react@latest",
+      "destination": "public/deps/react",
+      "files": [
+        "umd/react.development.js"
+      ]
+    },
+    {
+      "library": "react-dom@latest",
+      "destination": "public/deps/react-dom",
+      "files": [
+        "umd/react-dom.development.js"
+      ]
+    },
+    {
+      "library": "@babel/standalone@latest",
+      "destination": "public/deps/babel",
+      "files": [
+        "babel.min.js"
+      ]
+    }
+  ]
+}

@@ -12,10 +12,13 @@ namespace CollectorComponentRunner
     {
         static void Main(string[] args)
         {
-            var container = ComponentRunnerHelpers.ComponentRunnerHelper.BootstrapIoCContainer(builder =>
-            {
-                builder.RegisterModule<CollectorAutofacModule>();
-            });
+            var configuration = ComponentRunnerHelpers.ComponentRunnerHelper.GetConfiguration(args);
+            var container = ComponentRunnerHelpers.ComponentRunnerHelper.BootstrapIoCContainer(configuration,
+                builder =>
+                {
+                    builder.RegisterModule<CollectorAutofacModule>();
+                }
+            );
             container.Resolve<CollectorComponent>().Start();
             Console.WriteLine("Collector component started. Press [ENTER] to quit.");
             Console.ReadLine();

@@ -27,11 +27,21 @@ namespace PoF.StagingStore.Azure
             return _blobClient.GetContainerReference("ingest-" + contextId.ToString().ToLower());
         }
 
-        public Task<Guid[]> GetStoredContextIds()
+        public async Task<Guid[]> GetStoredContextIds()
         {
-            var containers = _blobClient.ListContainers(prefix: "ingest-");
+            var containers = new List<CloudBlobContainer>();
+            ContainerResultSegment results = null;
+            do
+            {
+                results = await _blobClient.ListContainersSegmentedAsync(
+                    prefix: "ingest-",
+                    currentToken: results?.ContinuationToken
+                ).ConfigureAwait(false);
+                containers.AddRange(results.Results);
+            } while (results != null && results.ContinuationToken != null);
+
             var ids = containers.Select(c => Guid.Parse(c.Name.Substring("ingest-".Length))).ToArray();
-            return Task.FromResult(ids);
+            return ids;
         }
 
         public Task<IStagingStore> GetStoreForContextIdAsync(Guid contextId)

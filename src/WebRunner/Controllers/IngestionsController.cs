@@ -1,4 +1,5 @@
-﻿using PoF.CaPM;
+﻿using Microsoft.AspNetCore.Mvc;
+using PoF.CaPM;
 using PoF.CaPM.IngestSaga.Events;
 using PoF.Common.Commands.IngestCommands;
 using PoF.Messaging;
@@ -7,13 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
 using WebRunner.Models;
 
 namespace WebRunner.Controllers
 {
-    public class IngestionsController : ApiController
+    [Route("api/ingestions")]
+    public class IngestionsController : ControllerBase
     {
         private IComponentChannelIdentifierRepository _componentChannelIdentifierRepository;
         private IMessageSenderFactory _messageSenderFactory;
@@ -35,7 +35,7 @@ namespace WebRunner.Controllers
         }
 
         [HttpPost]
-        public async Task Post(StartIngestionModel model)
+        public async Task Post([FromBody]StartIngestionModel model)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +49,7 @@ namespace WebRunner.Controllers
             }
             else
             {
-                throw new ArgumentException("Invalid model posted");
+                throw new ArgumentException("Invalid model posted. " + System.Text.Json.JsonSerializer.Serialize(ModelState));
             }
         }
     }
