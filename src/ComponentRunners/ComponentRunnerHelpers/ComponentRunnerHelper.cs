@@ -72,11 +72,17 @@ namespace ComponentRunnerHelpers
             {
                 builder.Register(_ => InMemoryMessageChannelProvider.Instance).As<InMemoryMessageChannelProvider>().As<IChannelProvider>().SingleInstance();
                 builder.RegisterType<InMemoryMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
+#if DEBUG
+                Console.WriteLine("Configuring in-memory message provider");
+#endif
             }
             else
             {
                 builder.Register(_ => new ServiceBusMessageChannelProvider(connectionString)).As<ServiceBusMessageChannelProvider>().As<IChannelProvider>().SingleInstance();
                 builder.RegisterType<ServiceBusMessageSenderFactory>().As<IMessageSenderFactory>().SingleInstance();
+#if DEBUG
+                Console.WriteLine("Configuring azure storage queue message provider");
+#endif
             }
         }
 
@@ -86,10 +92,16 @@ namespace ComponentRunnerHelpers
             if (string.IsNullOrWhiteSpace(connectionstring))
             {
                 ConfigureInMemoryStagingStore(builder);
+#if DEBUG
+                Console.WriteLine("Configuring in-memory staging store provider");
+#endif
             }
             else
             {
                 ConfigureAzureBlobStorageStagingStore(connectionstring, builder);
+#if DEBUG
+                Console.WriteLine("Configuring azure storage blobs staging store provider");
+#endif
             }
         }
 
@@ -98,13 +110,13 @@ namespace ComponentRunnerHelpers
             builder.RegisterType<InMemoryStagingStoreContainer>().As<IStagingStoreContainer>().SingleInstance();
         }
 
-        private const string AzureStorageConnectionString_ConfigurationKey = "AzureBlobStorageStagingStoreConnectionString";
+        private const string AzureStorageConnectionString_ConfigurationKey = "AzureBlobStorageConnectionString";
 
         private static void ConfigureAzureBlobStorageStagingStore(string connectionString, ContainerBuilder builder)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new Exception("Invalid configuration. Missing connection string with name 'AzureBlobStorageStagingStoreConnectionString'.");
+                throw new Exception("Invalid configuration. Missing connection string with name 'AzureBlobStorageConnectionString'.");
             }
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var cloudBlobClient = storageAccount.CreateCloudBlobClient();

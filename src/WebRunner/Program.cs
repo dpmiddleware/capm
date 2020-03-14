@@ -22,9 +22,32 @@ namespace WebRunner
                 .ConfigureAppConfiguration(config =>
                 {
                     config
+                        .AddInMemoryCollection(new Dictionary<string, string>
+                        {
+                            ["ComponentsToRun"] = "Archiver;Collector;RandomError"
+                        })
                         .AddJsonFile("config.json", optional: true)
                         .AddEnvironmentVariables()
                         .AddCommandLine(args ?? new string[0]);
+
+                    var overrides = new Dictionary<string, string>();
+                    if (args != null)
+                    {
+                        if (args.Contains("--use-storage-emulator"))
+                        {
+                            Console.WriteLine("Running application using Azure Storage Emulator for Staging Store, AIP Store and Messaging providers");
+                            overrides.Add("AzureBlobStorageConnectionString", "UseDevelopmentStorage=true");
+                        }
+                        if (args.Contains("--use-external-component-runners"))
+                        {
+                            Console.WriteLine("Running application with only CaPM component. Expecting external component runners to handle other components.");
+                            overrides.Add("ComponentsToRun", null);
+                        }
+                    }
+                    if (overrides.Any())
+                    {
+                        config.AddInMemoryCollection(overrides);
+                    }
                 })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>

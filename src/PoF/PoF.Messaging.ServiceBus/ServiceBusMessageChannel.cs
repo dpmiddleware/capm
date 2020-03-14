@@ -10,6 +10,7 @@ using System.IO;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.WindowsAzure.Storage;
 
+//TODO: This namespace and its classes are named incorrectly. The implementation uses Azure Storage Queues, not Azure Service Bus. Please rename them
 namespace PoF.Messaging.ServiceBus
 {
     public class ServiceBusMessageChannel
