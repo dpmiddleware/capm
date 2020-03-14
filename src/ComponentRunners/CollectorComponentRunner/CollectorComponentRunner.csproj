@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <Content Remove="config.json" />
+    <Content Include="config.json" CopyToPublishDirectory="Never" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

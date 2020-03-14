@@ -68,7 +68,7 @@ namespace WebRunner
             configuration["ComponentsToRun"]?.Split(',', ';').Select(c => c.Trim()).ToArray() ?? new string[0];
 
         private static string GetAzureStorageConnectionString(IConfiguration configuration) =>
-            configuration["AzureBlobStorageStagingStoreConnectionString"];
+            configuration["AzureBlobStorageConnectionString"];
 
         private static void ConfigureAipStore(IConfiguration configuration, ContainerBuilder builder)
         {

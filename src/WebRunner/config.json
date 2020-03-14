@@ -6,7 +6,5 @@
       "Microsoft.Hosting.Lifetime": "Information"
     }
   },
-  "AllowedHosts": "*",
-  "AzureBlobStorageStagingStoreConnectionString": "UseDevelopmentStorage=true",
-  "ComponentsToRun": "Archiver;Collector;RandomError"
+  "AllowedHosts": "*"
 }
