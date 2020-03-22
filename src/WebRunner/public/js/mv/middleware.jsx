@@ -4,7 +4,7 @@ import React from "react";
 import { debounce } from "./debounce.js";
 import { CapmIngestDetails } from "./capm-ingest-details.jsx";
 
-const ingestDetailsRegex = /#\/ingests\/(?<ingestid>[^\/]+)/;
+const ingestDetailsRegex = /#\/ingests\/([^\/]+)/;
 export const Middleware = () => {
     const [processIds, setProcessIds] = React.useState(ingestEventService.getIngestProcessIds());
     const [locationHash, setLocationHash] = React.useState(window.location.hash);
@@ -18,7 +18,7 @@ export const Middleware = () => {
         }, false);
     }, []);
     if (ingestDetailsRegex.test(locationHash)) {
-        const ingestId = ingestDetailsRegex.exec(locationHash).groups.ingestid;
+        const ingestId = ingestDetailsRegex.exec(locationHash)[1];
         if (processIds.indexOf(ingestId) !== -1) {
             return (
                 <div className="capm-system">

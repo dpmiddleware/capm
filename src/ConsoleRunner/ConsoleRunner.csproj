@@ -13,6 +13,7 @@
     <ProjectReference Include="..\PoF\PoF.FakeImplementations\PoF.FakeImplementations.csproj" />
     <ProjectReference Include="..\PoF\PoF.Messaging\PoF.Messaging.csproj" />
     <ProjectReference Include="..\PoF\PoF.StagingStore\PoF.StagingStore.csproj" />
+    <ProjectReference Include="..\PoF\PoF.StagingStore.Filesystem\PoF.StagingStore.Filesystem.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.1.2" />

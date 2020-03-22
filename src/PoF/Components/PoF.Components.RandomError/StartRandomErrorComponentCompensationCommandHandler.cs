@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PoF.Components.RandomError
 {
-    public class StartRandomErrorComponentCompensationCommandHandler: ICommandHandler<StartComponentCompensationCommand>
+    public class StartRandomErrorComponentCompensationCommandHandler : ICommandHandler<StartComponentCompensationCommand>
     {
         private IMessageSenderFactory _messageSenderFactory;
 
@@ -16,11 +16,28 @@ namespace PoF.Components.RandomError
 
         public async Task Handle(StartComponentCompensationCommand command)
         {
-            await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
+            var settings = RandomErrorComponentSettings.GetSettings(command.ComponentSettings);
+            if (!settings.SkipDelay)
             {
-                ComponentExecutionId = command.ComponentExecutionId,
-                IngestId = command.IngestId
-            });
+                await Task.Delay((int)(RandomErrorComponent._randomizer.NextDouble() * 2 * 1000));
+            }
+            if (RandomErrorComponent._randomizer.NextDouble() < settings.CompensationFailureRisk)
+            {
+                await _messageSenderFactory.GetChannel<FailComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new FailComponentWorkCommand()
+                {
+                    ComponentExecutionId = command.ComponentExecutionId,
+                    IngestId = command.IngestId,
+                    Reason = "The randomizer has chosen to give this compensation execution an error"
+                });
+            }
+            else
+            {
+                await _messageSenderFactory.GetChannel<CompleteComponentWorkCommand>(command.ComponentResultCallbackChannel).Send(new CompleteComponentWorkCommand()
+                {
+                    ComponentExecutionId = command.ComponentExecutionId,
+                    IngestId = command.IngestId
+                });
+            }
         }
     }
 }

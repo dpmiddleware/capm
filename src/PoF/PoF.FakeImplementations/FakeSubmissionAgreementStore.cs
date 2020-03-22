@@ -97,5 +97,10 @@ namespace PoF.FakeImplementations
         {
             return _submissionAgreements.Keys.ToArray();
         }
+
+        public void Add(string id, SubmissionAgreement submissionAgreement)
+        {
+            _submissionAgreements.Add(id, submissionAgreement);
+        }
     }
 }

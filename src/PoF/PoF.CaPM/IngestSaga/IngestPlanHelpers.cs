@@ -18,9 +18,18 @@ namespace PoF.CaPM.IngestSaga
         private static IngestPlanSet.IngestPlanEntry? GetFirstNonCompletedComponentInPlan(IngestPlanSet lastExecutionPlan, IIngestEvent[] storedEvents)
         {
             var completedComponentExecutionIds =
-                storedEvents.OfType<IngestComponentWorkCompleted>().Select(e => e.ComponentExecutionId).Concat(
-                    storedEvents.OfType<IngestComponentCompensationCompleted>().Select(e => e.ComponentExecutionId)
-                ).ToArray();
+                storedEvents
+                    .Select(e => e switch
+                    {
+                        IngestComponentWorkCompleted icwc => icwc.ComponentExecutionId,
+                        IngestComponentCompensationCompleted iccc => iccc.ComponentExecutionId,
+                        IngestComponentWorkFailed icwf => icwf.ComponentExecutionId,
+                        IngestComponentCompensationFailed iccf => iccf.ComponentExecutionId,
+                        _ => (Guid?)null
+                    })
+                    .Where(s => s.HasValue)
+                    .Select(s => s.Value)
+                    .ToArray();
             var orderedPlanEntries = lastExecutionPlan.IngestPlan.OrderBy(p => p.Order);
             foreach (var planEntry in orderedPlanEntries)
             {
