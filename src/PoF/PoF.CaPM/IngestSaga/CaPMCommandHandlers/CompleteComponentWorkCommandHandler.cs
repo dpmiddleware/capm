@@ -33,12 +33,23 @@ namespace PoF.CaPM.IngestSaga.CaPMCommandHandlers
             var allPreviousEvents = await eventStore.GetStoredEvents();
             //In case the component has already been considered timeout out (or, for some erraneous reason
             //has already reported that it has errored or completed) we want to ignore this message.
-            if (command.ComponentExecutionId.MatchesCurrentlyExecutingComponentExecutionId(allPreviousEvents))
+            var currentlyExecutingComponent = allPreviousEvents.GetFirstNonCompletedComponentInCurrentPlan();
+            if (currentlyExecutingComponent.HasValue && currentlyExecutingComponent.Value.ComponentExecutionId == command.ComponentExecutionId)
             {
-                await eventStore.StoreEvent(new IngestComponentWorkCompleted()
+                if (currentlyExecutingComponent.Value.IsCompensatingComponent)
                 {
-                    ComponentExecutionId = command.ComponentExecutionId
-                }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
+                    await eventStore.StoreEvent(new IngestComponentCompensationCompleted
+                    {
+                        ComponentExecutionId = command.ComponentExecutionId
+                    }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
+                }
+                else
+                {
+                    await eventStore.StoreEvent(new IngestComponentWorkCompleted()
+                    {
+                        ComponentExecutionId = command.ComponentExecutionId
+                    }, _messageSenderFactory.GetChannel<SerializedEvent>(_componentChannelIdentifierRepository.GetChannelIdentifierFor(IngestEventConstants.ChannelIdentifierCode)));
+                }
                 await _componentPlanExecutor.ExecuteNextComponentInPlan(command.IngestId);
             }
         }

@@ -41,8 +41,8 @@ export const CapmGraph = ({ ingestId }) => {
                         id: step.componentExecutionId,
                         title: /^Component\./i.test(step.componentCode) ? step.componentCode.substring('Component.'.length) : step.componentCode,
                         startedAt: startEvent ? startEvent.timestamp : null,
-                        wasSuccessful: getEvent('IngestComponentWorkCompleted', step.componentExecutionId) != null,
-                        wasFailed: getEvent('IngestComponentWorkFailed', step.componentExecutionId) != null,
+                        wasSuccessful: getEvent('IngestComponentWorkCompleted|IngestComponentCompensationCompleted', step.componentExecutionId) != null,
+                        wasFailed: getEvent('IngestComponentWorkFailed|IngestComponentCompensationFailed', step.componentExecutionId) != null,
                         wasCompensationStep: step.isCompensatingComponent
                     };
                 })

@@ -1,13 +1,6 @@
-﻿using Autofac;
-using PoF.Common;
+﻿using PoF.Common;
 using PoF.Common.Commands.IngestCommands;
-using PoF.Messaging;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PoF.Components.RandomError
 {
@@ -15,6 +8,7 @@ namespace PoF.Components.RandomError
     {
         public const string RandomErrorComponentIdentifier = "Component.RandomError";
         private ICommandMessageListener _commandHandlerListener;
+        internal static readonly Random _randomizer = new Random();
 
         public RandomErrorComponent(ICommandMessageListener commandHandlerListener)
         {

@@ -14,6 +14,8 @@ namespace PoF.Common
 {
     public static class MessageSourceExtensions
     {
+        public static bool DisableMessageProcessingConsoleOutput { get; set; } = false;
+
         public static IDisposable RegisterCommandHandler<Command, CommandHandler>(this IChannelProvider channelProvider, ChannelIdentifier channelIdentifier, ILifetimeScope iocLifetimeScope)
             where CommandHandler : ICommandHandler<Command>
         {
@@ -32,7 +34,10 @@ namespace PoF.Common
 
         private static void WriteToConsole<Command, CommandHandler>(Guid correlationId, string message)
         {
-            Console.WriteLine($"{DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")}: [{typeof(CommandHandler).FullName}] - {correlationId} - {message}");
+            if (!DisableMessageProcessingConsoleOutput)
+            {
+                Console.WriteLine($"{DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")}: [{typeof(CommandHandler).FullName}] - {correlationId} - {message}");
+            }
         }
     }
 }
